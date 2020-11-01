@@ -1,12 +1,19 @@
 openapi: 3.0.1
 info:
   title: Confinebot
-  version: 1.0.0
+  version: 0.0.1
+tags:
+  - name: Match API
+  - name: Team API
+  - name: Server API
+  - name: User API
 paths:
   /match:
     get:
       summary: List all matches
       operationId: listMatch
+      tags:
+        - Match API
       responses:
         200:
           description: A list of matches
@@ -19,12 +26,14 @@ paths:
     post:
       summary: Create a new match
       operationId: createMatch
+      tags:
+        - Match API
       requestBody:
-        description: Pet object that needs to be added to the store
+        description: Match configuration object
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Match'
+              $ref: '#/components/schemas/MatchConfig'
         required: true
       responses:
         200:
@@ -33,28 +42,311 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Match'
+  /match/{id}:
+    get:
+      summary: Get a match object by id
+      operationId: getMatch
+      tags:
+        - Match API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Match object id
+      responses:
+        200:
+          description: The details of the match
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+    delete:
+      summary: Delete a match object by id
+      operationId: deleteMatch
+      tags:
+        - Match API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Match object id
+      responses:
+        200:
+          description: Sucessfully deleted
+
+  /match/{id}/stats:
+    get:
+      summary: Get additional match statistics
+      operationId: getMatchStats
+      tags:
+        - Match API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Match object id
+      responses:
+        200:
+          description: The current stats of the match
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchStats'
+
+  /team:
+    get:
+      summary: List all teams
+      operationId: listTeam
+      tags:
+        - Team API
+      responses:
+        200:
+          description: A list of teams
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Team'
+    post:
+      summary: Create a new team
+      operationId: createTeam
+      tags:
+        - Team API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamConfig'
+        required: true
+      responses:
+        200:
+          description: The details of the team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+  /team/{id}:
+    get:
+      summary: Get a team object by id
+      operationId: getTeam
+      tags:
+        - Team API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Team object id
+      responses:
+        200:
+          description: The details of the team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+    delete:
+      summary: Delete a team object by id
+      operationId: deleteTeam
+      tags:
+        - Team API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Team object id
+      responses:
+        200:
+          description: Sucessfully deleted
+
+  /server:
+    get:
+      summary: List all servers
+      operationId: listServers
+      tags:
+        - Server API
+      responses:
+        200:
+          description: A list of servers
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Server'
+    post:
+      summary: Create a new server
+      operationId: createServer
+      tags:
+        - Server API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServerConfig'
+        required: true
+      responses:
+        200:
+          description: The details of the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Server'
+  /server/{id}:
+    get:
+      summary: Get a server object by id
+      operationId: getServer
+      tags:
+        - Server API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Server object id
+      responses:
+        200:
+          description: The details of the Server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Server'
+    delete:
+      summary: Delete a server object by id
+      operationId: deleteServer
+      tags:
+        - Server API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Team object id
+      responses:
+        200:
+          description: Sucessfully deleted
+                
+  /user:
+    get:
+      summary: List all users
+      operationId: listUsers
+      tags:
+        - User API
+      responses:
+        200:
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create a new user
+      operationId: createUser
+      tags:
+        - User API
+      requestBody:
+        description: Match configuration object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserConfig'
+        required: true
+      responses:
+        200:
+          description: The details of the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /user/{id}:
+    get:
+      summary: Get a user object by id
+      operationId: getUser
+      tags:
+        - User API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: User object id
+      responses:
+        200:
+          description: The details of the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      summary: Delete a user object by id
+      operationId: deleteUser
+      tags:
+        - User API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: User object id
+      responses:
+        200:
+          description: Sucessfully deleted
+                
 components:
   schemas:
+    TeamConfig:
+      type: object
+      properties:
+        name:
+          type: string
+        nationality:
+          type: string
     Team:
       type: object
       properties:
         id:
           type: integer
-          format: int64
+          format: int32
         name:
           type: string
         nationality:
           type: string
-    Match:
+    TeamStats:
       type: object
       properties:
-        id:
+        victories:
           type: integer
-          format: int64
+        kills:
+          type: integer
+    MatchStats:
+      type: object
+      properties:
         teamA:
-          $ref: '#/components/schemas/Team'
+          $ref: '#/components/schemas/TeamStats'
         teamB:
-          $ref: '#/components/schemas/Team'
+          $ref: '#/components/schemas/TeamStats'
+    MatchConfig:
+      type: object
+      properties:
+        IDteamA:
+          type: integer
+        IDteamB:
+          type: integer
         password:
           type: string
         map:
@@ -66,7 +358,7 @@ components:
           - BO3
         maxRounds:
           type: integer
-          format: int64
+          format: int32
         overtime:
           type: boolean
           default: false
@@ -82,9 +374,58 @@ components:
         autostartMatch:
           type: boolean
           default: false
-        firstSide:
+        firstSideTerrorist:
           type: string
           enum:
-          - ACTBT
-          - BCTAT
+          - A
+          - B
           - random
+    Match:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        config:
+          $ref: '#/components/schemas/MatchConfig'
+        scoreA:
+          type: integer
+          format: int32
+        scoreB:
+          type: integer
+          format: int32
+    ServerConfig:
+      type: object
+      properties:
+        nickname:
+          type: string
+    Server:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        ip:
+          type: string
+          format: ipv4
+        port:
+          type: integer
+          format: int32
+        nickname:
+          type: string
+    UserConfig:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        username:
+          type: string
+
