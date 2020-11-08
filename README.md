@@ -14,6 +14,7 @@
 * RCON interface : [aiorcon](https://github.com/InsaLan/aiorcon)
 
 ### Build a development environment
-1. Install python3 and pip and optionally setup a venv.
-2. Install dependencies: `pip3 install -r requirements.txt`
-3. Run the backend: `./main.py` 
+1. Install python3 and pip
+2. Activate `venv/bin/activate`
+3. Install dependencies: `pip3 install -r requirements.txt`
+4. Run the backend: `./main.py` 
