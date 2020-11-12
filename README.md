@@ -18,3 +18,8 @@
 2. Activate `venv/bin/activate`
 3. Install dependencies: `pip3 install -r requirements.txt`
 4. Run the backend: `./main.py` 
+
+### TODO
+- [x] design the Database
+- [ ] design the REST API
+- [x] Adding models
