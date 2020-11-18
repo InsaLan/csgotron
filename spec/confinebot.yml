@@ -1,12 +1,14 @@
 openapi: 3.0.1
 info:
   title: Confinebot
-  version: 0.0.1
+  version: 0.0.2
 tags:
   - name: Match API
   - name: Team API
+  - name: Player API
   - name: Server API
   - name: User API
+  - name: Auth API
 paths:
   /match:
     get:
@@ -33,7 +35,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MatchConfig'
+              $ref: '#/components/schemas/Match'
         required: true
       responses:
         200:
@@ -78,9 +80,9 @@ paths:
         200:
           description: Sucessfully deleted
 
-  /match/{id}/stats:
+  /match/{id}/rounds:
     get:
-      summary: Get additional match statistics
+      summary: Get match rounds
       operationId: getMatchStats
       tags:
         - Match API
@@ -97,7 +99,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MatchStats'
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Round'
 
   /team:
     get:
@@ -167,6 +171,50 @@ paths:
       responses:
         200:
           description: Sucessfully deleted
+  /player/{steamid}/stats:
+    get:
+      summary: Global Player Stats
+      operationId: playerStats
+      tags:
+        - Player API
+      parameters:
+        - in: path
+          name: steamid
+          schema:
+            type: integer
+          required: true
+          description: Team object id
+      responses:
+        200:
+          description: Flemme
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  match:
+                    $ref: '#/components/schemas/Match'
+                  stats: 
+                    $ref: '#/components/schemas/PlayerStats'
+
+  /stats:
+    get:
+      summary: Global Stats
+      operationId: globalStats
+      tags:
+        - Server API
+      responses:
+        200:
+          description: A list of servers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  player:
+                    $ref: '#/components/schemas/Player'
+                  stats: 
+                    $ref: '#/components/schemas/PlayerStats'
 
   /server:
     get:
@@ -306,9 +354,48 @@ paths:
       responses:
         200:
           description: Sucessfully deleted
-                
+  /login:
+    post:
+      summary: Get a JWT token
+      operationId: login
+      tags:
+        - Auth API
+      requestBody:
+        description: Match configuration object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginPayload'
+      responses:
+        200:
+          description: The details of the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+  /logout:
+    post:
+      summary: Revoke JWT token
+      operationId: logout
+      tags:
+        - Auth API
+      responses:
+        200:
+          description: The details of the user
 components:
   schemas:
+    LoginPayload:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    Token:
+      type: object
+      properties:
+        jwt:
+          type: string
     TeamConfig:
       type: object
       properties:
@@ -340,15 +427,13 @@ components:
           $ref: '#/components/schemas/TeamStats'
         teamB:
           $ref: '#/components/schemas/TeamStats'
-    MatchConfig:
+    MatchPayload:
       type: object
       properties:
         IDteamA:
           type: integer
         IDteamB:
           type: integer
-        password:
-          type: string
         map:
           type: string
         mapSelectionMode:
@@ -386,14 +471,103 @@ components:
         id:
           type: integer
           format: int32
+        password:
+          type: string
+        isPaused:
+          type: boolean
         config:
-          $ref: '#/components/schemas/MatchConfig'
-        scoreA:
+          $ref: '#/components/schemas/MatchPayload'
+        teamA:
+          $ref: '#/components/schemas/Team'
+        teamB:
+          $ref: '#/components/schemas/Team'
+        server:
+          $ref: '#/components/schemas/Server'
+    Player:
+      type: object
+      properties:
+        username:
+          type: string
+        team:
+          $ref: '#/components/schemas/Team'
+    PlayerStats:
+      type: object
+      properties:
+        kill:
           type: integer
           format: int32
-        scoreB:
+        tk:
           type: integer
           format: int32
+        death:
+          type: integer
+          format: int32
+        point:
+          type: integer
+          format: int32
+        headshots:
+          type: integer
+          format: int32
+        bombDefused:
+          type: integer
+          format: int32
+        bombPlanted:
+          type: integer
+          format: int32
+        1v1:
+          type: integer
+          format: int32
+        1v2:
+          type: integer
+          format: int32
+        1v3:
+          type: integer
+          format: int32
+        1v4:
+          type: integer
+          format: int32
+        1v5:
+          type: integer
+          format: int32
+        1killPerRound:
+          type: integer
+          format: int32
+        2killPerRound:
+          type: integer
+          format: int32
+        3killPerRound:
+          type: integer
+          format: int32
+        4killPerRound:
+          type: integer
+          format: int32
+        5killPerRound:
+          type: integer
+          format: int32
+        firstKills:
+          type: integer
+          format: int32
+        weaponStats:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/Weapon'
+    Round:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        firstKillPlayer:
+          $ref: '#/components/schemas/Player'
+        defusePlayer:
+          $ref: '#/components/schemas/Player'
+        plantedPlayer:
+          $ref: '#/components/schemas/Player'
+        winnerPlayer:
+          $ref: '#/components/schemas/Player'
+        explosed:
+          type: boolean
+
     ServerConfig:
       type: object
       properties:
@@ -420,6 +594,17 @@ components:
           type: string
         password:
           type: string
+    Weapon:
+      type: object
+      properties:
+        name:
+          type: string
+        image:
+          type: string
+        headshot:
+          type: string
+        normal:
+          type: string
     User:
       type: object
       properties:
@@ -428,4 +613,5 @@ components:
           format: int32
         username:
           type: string
+
 

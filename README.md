@@ -22,4 +22,15 @@
 ### TODO
 - [x] design the Database
 - [ ] design the REST API
+  - [x] global stats
+  - [x] player stats
+  - [x] authentication endpoints
+  - [ ] add demos
+  - [ ] add gotv field (db + API)
+  - [ ] heatmap api
+  - [ ] weapon stats
+  - [ ] map stats
+  - [ ] stats by match
+  - [ ] rounds of a match
+  - [ ] endpoints to interact with the server (stop, pause)
 - [x] Adding models
