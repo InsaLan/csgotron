@@ -3,6 +3,7 @@ info:
   title: Confinebot
   version: 0.0.2
 tags:
+  - name: Global Stats API
   - name: Match API
   - name: Team API
   - name: Player API
@@ -64,6 +65,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Match'
+
+    patch:
+      summary: Patch a match object by id
+      operationId: patchMatch
+      tags:
+        - Match API
+      requestBody:
+        description: Match configuration object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Match'
+        required: true
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Match object id
+      responses:
+        200:
+          description: The details of the match
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+
     delete:
       summary: Delete a match object by id
       operationId: deleteMatch
@@ -102,6 +132,59 @@ paths:
                 type: 'array'
                 items:
                   $ref: '#/components/schemas/Round'
+
+  /match/{id}/kills:
+    get:
+      summary: Get heatmap
+      operationId: getHeatmap
+      tags:
+        - Match API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Match object id
+      responses:
+        200:
+          description: The current stats of the match
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Kill'
+
+  /match/{id}/players:
+    get:
+      summary: Get players and stats
+      operationId: getMatchPlayers
+      tags:
+        - Match API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Match object id
+      responses:
+        200:
+          description: Flemme
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  type: object
+                  properties:
+                    player:
+                      $ref: '#/components/schemas/Player'
+                    stats: 
+                      $ref: '#/components/schemas/PlayerStats'
+
+
 
   /team:
     get:
@@ -156,6 +239,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Team'
+    patch:
+      summary: Patch a team object by id
+      operationId: patchTeam
+      tags:
+        - Team API
+      requestBody:
+        description: Team configuration object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+        required: true
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Team object id
+      responses:
+        200:
+          description: The details of the team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+                
     delete:
       summary: Delete a team object by id
       operationId: deleteTeam
@@ -197,15 +308,15 @@ paths:
                   stats: 
                     $ref: '#/components/schemas/PlayerStats'
 
-  /stats:
+  /stats/global/player:
     get:
-      summary: Global Stats
-      operationId: globalStats
+      summary: By Players
+      operationId: getGlobalPlayerStats
       tags:
-        - Server API
+        - Global Stats API
       responses:
         200:
-          description: A list of servers
+          description: A list of union player-stats
           content:
             application/json:
               schema:
@@ -215,6 +326,90 @@ paths:
                     $ref: '#/components/schemas/Player'
                   stats: 
                     $ref: '#/components/schemas/PlayerStats'
+
+  /stats/global/maps/details:
+    get:
+      summary: By Maps
+      operationId: getGlobalMapsStatsDetails
+      tags:
+        - Global Stats API
+      responses:
+        200:
+          description: xx
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/RoundsPerMapStats'
+
+  /stats/global/maps/rounds_per_map:
+    get:
+      summary: By Maps
+      operationId: getGlobalMapsStatsRounds
+      tags:
+        - Global Stats API
+      responses:
+        200:
+          description: xx
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/MapsStats'
+
+  /stats/global/weapon:
+    get:
+      summary: By Weapon
+      operationId: getGlobalWeaponStats
+      tags:
+        - Global Stats API
+      responses:
+        200:
+          description: xx
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Weapon'
+
+  /stats/global/weapon/topplayers/{nbPlayers}:
+    get:
+      summary: By Weapon
+      operationId: getTopPlayersPerWeapon
+      tags:
+        - Global Stats API
+      parameters:
+        - in: path
+          name: nbPlayers
+          schema:
+            type: integer
+          required: true
+          description: Number of top players to gather
+      responses:
+        200:
+          description: xx
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  type: object
+                  properties:
+                    weapon:
+                      $ref: '#/components/schemas/Weapon'
+                    players:
+                      type: 'array'
+                      items:
+                        type: object
+                        properties:
+                          player:
+                            $ref: '#/components/schemas/Player'
+                          killNb:
+                            type: integer
+                      
 
   /server:
     get:
@@ -269,6 +464,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Server'
+    patch:
+      summary: Patch a server object by id
+      operationId: patchServer
+      tags:
+        - Server API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Server object id
+      requestBody:
+        description: Server configuration object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServerConfig'
+        required: true
+      responses:
+        200:
+          description: The details of the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Server'
+
     delete:
       summary: Delete a server object by id
       operationId: deleteServer
@@ -287,7 +509,7 @@ paths:
                 
   /user:
     get:
-      summary: List all users
+      summary: List all API users
       operationId: listUsers
       tags:
         - User API
@@ -301,7 +523,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
     post:
-      summary: Create a new user
+      summary: Create a new API user
       operationId: createUser
       tags:
         - User API
@@ -321,7 +543,7 @@ paths:
                 $ref: '#/components/schemas/User'
   /user/{id}:
     get:
-      summary: Get a user object by id
+      summary: Get a API user object by id
       operationId: getUser
       tags:
         - User API
@@ -339,8 +561,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+
+    patch:
+      summary: Patch a API user object by id
+      operationId: patchUser
+      tags:
+        - User API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: User object id
+      requestBody:
+        description: User configuration object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserConfig'
+        required: true
+      responses:
+        200:
+          description: The details of the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+                
     delete:
-      summary: Delete a user object by id
+      summary: Delete a API user object by id
       operationId: deleteUser
       tags:
         - User API
@@ -413,20 +664,37 @@ components:
           type: string
         nationality:
           type: string
-    TeamStats:
+    RoundsPerMapStats:
       type: object
       properties:
-        victories:
+        map:
+          type: string
+        wonCT:
           type: integer
-        kills:
+        wonT:
           type: integer
-    MatchStats:
+    MapDetailsPerSide:
       type: object
       properties:
-        teamA:
-          $ref: '#/components/schemas/TeamStats'
-        teamB:
-          $ref: '#/components/schemas/TeamStats'
+        winNb:
+          type: integer
+        pistolRounds:
+          type: integer
+        winProbabilityStarting:
+          type: number
+    MapsStats:
+      type: object
+      properties:
+        map:
+          type: string
+        matchesNb:
+          type: integer
+        drawsNb:
+          type: integer
+        counter:
+          $ref: '#/components/schemas/MapDetailsPerSide'
+        terrorist:
+          $ref: '#/components/schemas/MapDetailsPerSide'
     MatchPayload:
       type: object
       properties:
@@ -465,6 +733,15 @@ components:
           - A
           - B
           - random
+    DemoDetails:
+      type: object
+      properties:
+        isAvailable:
+          type: boolean
+        id:
+          type: string
+        size:
+          type: number
     Match:
       type: object
       properties:
@@ -473,8 +750,8 @@ components:
           format: int32
         password:
           type: string
-        isPaused:
-          type: boolean
+        state:
+          type: string
         config:
           $ref: '#/components/schemas/MatchPayload'
         teamA:
@@ -483,6 +760,24 @@ components:
           $ref: '#/components/schemas/Team'
         server:
           $ref: '#/components/schemas/Server'
+        score:
+          type: object
+          properties:
+            teamA:
+              type: integer
+            teamB:
+              type: integer
+        roundPlayedNb:
+          type: integer
+        longuestRoundSteak:
+          type: object
+          properties:
+            teamA:
+              type: integer
+            teamB:
+              type: integer
+        demo:
+          $ref: '#/components/schemas/DemoDetails'
     Player:
       type: object
       properties:
@@ -490,6 +785,26 @@ components:
           type: string
         team:
           $ref: '#/components/schemas/Team'
+        hasJoinedMatch:
+          type: boolean
+    Kill:
+      type: object
+      properties:
+        xPos:
+          type: integer
+        yPos:
+          type: integer
+        zPos:
+          type: integer
+        timestamp:
+          type: integer
+        weapon:
+          type: string
+        killed:
+          $ref: '#/components/schemas/Player'
+        killer:
+          $ref: '#/components/schemas/Player'
+
     PlayerStats:
       type: object
       properties:
@@ -563,14 +878,20 @@ components:
           $ref: '#/components/schemas/Player'
         plantedPlayer:
           $ref: '#/components/schemas/Player'
-        winnerPlayer:
-          $ref: '#/components/schemas/Player'
+        winnerTeam:
+          $ref: '#/components/schemas/Team'
         explosed:
           type: boolean
 
     ServerConfig:
       type: object
       properties:
+        ip:
+          type: string
+          format: ipv4
+        port:
+          type: integer
+          format: int32
         nickname:
           type: string
     Server:
@@ -601,9 +922,9 @@ components:
           type: string
         image:
           type: string
-        headshot:
+        headshotHits:
           type: string
-        normal:
+        normalHits:
           type: string
     User:
       type: object
@@ -612,6 +933,8 @@ components:
           type: integer
           format: int32
         username:
+          type: string
+        token:
           type: string
 
 
