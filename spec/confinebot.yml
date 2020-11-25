@@ -184,6 +184,26 @@ paths:
                     stats: 
                       $ref: '#/components/schemas/PlayerStats'
 
+  /match/{id}/demo:
+    get:
+      summary: Get demo
+      operationId: getDemo
+      tags:
+        - Match API
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Match object id
+      responses:
+        200:
+          description: Flemme
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DemoDetails'
 
 
   /team:
@@ -738,7 +758,7 @@ components:
       properties:
         isAvailable:
           type: boolean
-        id:
+        url:
           type: string
         size:
           type: number
@@ -776,8 +796,6 @@ components:
               type: integer
             teamB:
               type: integer
-        demo:
-          $ref: '#/components/schemas/DemoDetails'
     Player:
       type: object
       properties:
@@ -936,5 +954,4 @@ components:
           type: string
         token:
           type: string
-
 
