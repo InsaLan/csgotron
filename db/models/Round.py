@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, ForeignKey, Boolean
 
-from db.Config import Base
+from . import Base
 class Round(Base):
     __tablename__ = 'round'
 

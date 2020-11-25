@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy_utils import IPAddressType
 
-from db.Config import Base
+from . import Base
 class Server(Base):
     __tablename__ = 'server'
 

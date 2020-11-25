@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime, Enum
 
-from db.Config import Base
+from . import Base
 class Match(Base):
     __tablename__ = 'match'
 
@@ -19,6 +19,9 @@ class Match(Base):
     autostartMatch = Column(Boolean)
     firstSideTerrorist = Column(String(1), nullable=False)
     firstSideT = Column(Integer, nullable=False)
-    FirstSideCT = Column(Integer, nullable=False)
+    firstSideCT = Column(Integer, nullable=False)
     secondSideT = Column(Integer, nullable=False)
     secondSideCT = Column(Integer, nullable=False)
+    startTime = Column(DateTime)
+    endTime = Column(DateTime)
+    state = Column(Enum, nullable=False)

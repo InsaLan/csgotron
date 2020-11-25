@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy_utils import PasswordType
-from db.Config import Base
+from . import Base
 class ApiUser(Base):
     __tablename__ = 'apiUser'
 
@@ -13,3 +13,4 @@ class ApiUser(Base):
         ],
         deprecated=['md5_crypt']
     ))
+    token = Column(String(1000), nullable=False)

@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from db.Config import Base
+from . import Base
 
 
 class Team(Base):
