@@ -12,4 +12,6 @@ class Kill(Base):
     weaponId = Column(Integer, ForeignKey('weapon.id'))
     killedId = Column(Integer, ForeignKey('player.id'))
     killerId = Column(Integer, ForeignKey('player.id'))
+    matchId  = Column(Integer, ForeignKey('match.id'))
+    RoundId  = Column(Integer, ForeignKey('round.id')) 
     isHeadShot = Column(Boolean)
