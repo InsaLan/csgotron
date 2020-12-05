@@ -1,23 +1,40 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
 
-_DB_URI = 'sqlite:///confinebot.db'
-engine = create_engine(_DB_URI, echo=True)
+Base = None
+session = None
+DBSession = None
+engine = None
 
-Base = declarative_base()
+def init_engine(filename):
+    global Base
+    global engine
 
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
+    engine = create_engine('sqlite:///{}'.format(filename), echo=True)
+    Base = declarative_base() 
 
-from .ApiUser import ApiUser
-from .Demo import Demo
-from .Kill import Kill
-from .Match import Match
-from .Player import Player
-from .Round import Round
-from .Server import Server
-from .Team import Team
-from .Weapon import Weapon
+def flush_data():
+    Base.metadata.drop_all(engine)
 
-Base.metadata.create_all(engine)
+def create_schema():
+    global Base
+    global engine
+    global session
+    global DBSession
+
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+
+    from .ApiUser import ApiUser
+    from .Demo import Demo
+    from .Kill import Kill
+    from .Match import Match
+    from .Player import Player
+    from .Round import Round
+    from .Server import Server
+    from .Team import Team
+    from .Weapon import Weapon
+    
+    Base.metadata.create_all(engine)

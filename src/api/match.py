@@ -17,8 +17,8 @@ class MatchApi(web.View):
     return web.json_response(list(map(lambda m: self.response_schema.dump(m), qs)))
 
   async def post(self):
-    data = await self.request_schema.json()
-    match = self.schema.load(data)
+    data = await self.request.json()
+    match = self.request_schema.load(data)
     #match.state = MatchState.started
     match.firstSideT = 0
     match.firstSideCT = 0
@@ -35,4 +35,4 @@ class MatchApi(web.View):
       session.rollback()
       raise
 
-    return web.json_response(self.request_schema.dump(match))
+    return web.json_response(self.response_schema.dump(match))
