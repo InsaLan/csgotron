@@ -2,10 +2,13 @@ from aiohttp import web
 from ..db.models.Server import Server
 from marshmallow import Schema, fields, post_load
 
-routes = web.RouteTableDef()
 
 class ServerSchema(Schema):
+<<<<<<< HEAD
   id = fields.Int(dump_only=True)
+=======
+  id = fields.Int()
+>>>>>>> 682c9c8 ([feat] start ApiUser)
   ip = fields.IPv4()
   port = fields.Int()
   nickname = fields.Str()
