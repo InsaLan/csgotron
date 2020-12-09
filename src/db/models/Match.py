@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime, Enum
-
+from sqlalchemy.orm import relationship
 from . import Base
 class Match(Base):
     __tablename__ = 'match'
@@ -24,4 +24,11 @@ class Match(Base):
     secondSideCT = Column(Integer, nullable=False)
     startTime = Column(DateTime)
     endTime = Column(DateTime)
-    state = Column(Enum, nullable=False)
+    #state = Column(Enum)
+    
+    server = relationship("Server", lazy='joined')
+    teamA = relationship("Team", foreign_keys=[idTeamA])
+    teamB = relationship("Team", foreign_keys=[idTeamB])
+
+    def __repr__(self):
+      return "<Match id={}, team {} vs {}>".format(self.id, self.idTeamA, self.idTeamB)
