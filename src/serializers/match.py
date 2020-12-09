@@ -5,13 +5,12 @@ from ..db.models.Match import Match
 from .server import ServerSchema
 from .team import TeamSchema
 
-routes = web.RouteTableDef()
 
 class BaseMatch(Schema):
-  id = fields.Int(strict=True)
+  id = fields.Int()
   map = fields.Str(required=True)
 
-  maxRound = fields.Int(strict=True)
+  maxRound = fields.Int()
 
   overtime = fields.Bool(missing=True)
   knifeRound = fields.Bool(missing=True)
@@ -19,7 +18,7 @@ class BaseMatch(Schema):
   playAllRound = fields.Bool(missing=True)
   autostartMatch = fields.Bool(missing=True)
 
-  maxRound = fields.Int(strict=True)
+  maxRound = fields.Int()
   
   @post_load
   def make_match(self, data, **kwargs):
@@ -31,9 +30,9 @@ class BaseMatch(Schema):
 class MatchRequestSchema(BaseMatch):
   password = fields.Str(required=True)
 
-  idTeamA = fields.Int(required=True, strict=True)
-  idTeamB = fields.Int(required=True, strict=True)
-  idServer = fields.Int(required=True, strict=True)
+  idTeamA = fields.Int(required=True)
+  idTeamB = fields.Int(required=True)
+  idServer = fields.Int(required=True)
 
 class MatchResponseSchema(BaseMatch):
   server = fields.Nested(ServerSchema)
