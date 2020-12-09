@@ -2,10 +2,9 @@ from aiohttp import web
 from ..db.models.Team import Team
 from marshmallow import Schema, fields, post_load
 
-routes = web.RouteTableDef()
 
 class TeamSchema(Schema):
-  id = fields.Int(strict=True)
+  id = fields.Int()
   name = fields.Str()
   nationality = fields.Str()
 
