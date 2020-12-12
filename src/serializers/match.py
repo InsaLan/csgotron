@@ -8,9 +8,11 @@ from .team import TeamSchema
 routes = web.RouteTableDef()
 
 class BaseMatch(Schema):
-  id = fields.Int(strict=True)
+
+  id = fields.Int(strict=True, dump_only=True)
   map = fields.Str(required=True)
 
+  password = fields.Str(required=True)
   maxRound = fields.Int(strict=True)
 
   overtime = fields.Bool(missing=True)
@@ -20,7 +22,7 @@ class BaseMatch(Schema):
   autostartMatch = fields.Bool(missing=True)
 
   maxRound = fields.Int(strict=True)
-  
+
   @post_load
   def make_match(self, data, **kwargs):
     return Match(**data)
@@ -28,12 +30,11 @@ class BaseMatch(Schema):
 # This serialization schema is used to parse POST /match body
 # Thus, we allow to fill and show the password field
 # and we allow the user to fill the Team IDs
+# TODO: this whole approch with two derived classes can be replaced by dump_only and load_only
 class MatchRequestSchema(BaseMatch):
-  password = fields.Str(required=True)
-
-  idTeamA = fields.Int(required=True, strict=True)
-  idTeamB = fields.Int(required=True, strict=True)
-  idServer = fields.Int(required=True, strict=True)
+  idTeamA = fields.Int(required=True)
+  idTeamB = fields.Int(required=True)
+  idServer = fields.Int(required=True)
 
 class MatchResponseSchema(BaseMatch):
   server = fields.Nested(ServerSchema)
