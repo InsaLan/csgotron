@@ -50,6 +50,7 @@ class UserApi(web.View):
             session.rollback()
             raise
         return web.json_response({"success": "The user was successfully created"},status=200)
+
     async def patch(self):
         pass
 
