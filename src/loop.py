@@ -1,6 +1,6 @@
 from aiohttp import web
 from src.db import models as db
-from src.api.middlewares.auth import auth_middleware, error_middleware
+from src.api.middlewares import auth_middleware, error_middleware
 
 def setup_aio():
   db.create_schema()
