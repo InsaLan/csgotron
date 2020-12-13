@@ -21,7 +21,7 @@
 
 ### TODO
 - [x] design the Database
-- [ ] design the REST API
+- [X] design the REST API
   - [x] global stats
   - [x] player stats
   - [x] authentication endpoints

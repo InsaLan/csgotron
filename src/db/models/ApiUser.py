@@ -1,6 +1,10 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy_utils import PasswordType
+from sqlalchemy_utils import PasswordType, force_auto_coercion
+
 from . import Base
+
+force_auto_coercion()
+
 class ApiUser(Base):
     __tablename__ = 'apiUser'
 
@@ -9,8 +13,5 @@ class ApiUser(Base):
     password = Column(PasswordType(
         schemes=[
             'sha256_crypt',
-            'md5_crypt'#TODO: remove this in production, debug only
         ],
-        deprecated=['md5_crypt']
     ))
-    token = Column(String(1000), nullable=False)
