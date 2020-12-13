@@ -4,7 +4,7 @@ from src.api.middlewares import auth_middleware, error_middleware
 
 def setup_aio():
   db.create_schema()
-  app = web.Application(middlewares=[auth_middleware, error_middleware])
+  app = web.Application(middlewares=[error_middleware, auth_middleware])
 
   from src.api import match, server, team, ApiUser
   app.router.add_routes(match.routes)

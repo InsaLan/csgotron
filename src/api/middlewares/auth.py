@@ -1,5 +1,6 @@
 from aiohttp import web
 from inspect import isfunction
+
 def auth_required(func):
     func.isAuth = True
     return func
@@ -7,6 +8,7 @@ def auth_required(func):
 @web.middleware
 async def auth_middleware(request, handler):
     response = await handler(request)
+    
     if isfunction(handler):
         auth_req = hasattr(handler, "isAuth")
     else:
