@@ -8,10 +8,8 @@ from ..db.models.ApiUser import ApiUser
 from ..serializers.ApiUser import ApiUserCreationSchema, ApiUserAuthSchema
 
 routes = web.RouteTableDef()
-SECRET_DEBUG = 'ThisIsASeCretK3y'
 
 @routes.post("/login")
-
 async def login(request):
     userForm = ApiUserAuthSchema()
     data = await request.json()
