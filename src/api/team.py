@@ -1,3 +1,5 @@
+from . import common
+
 from aiohttp import web
 from marshmallow import Schema, fields, post_load
 
@@ -12,8 +14,9 @@ class TeamApi(web.View):
   schema = TeamSchema()
 
   async def get(self):
-    qs = db.session.query(Team).all()
-    return web.json_response(list(map(lambda m: self.schema.dump(m), qs)))
+    session = db.DBSession()
+    qs = session.query(Team).all()
+    return web.json_response(self.schema.dump(qs, many=True))
 
   async def post(self):
     data = await self.request.json()
@@ -28,3 +31,50 @@ class TeamApi(web.View):
       raise
 
     return web.json_response(self.schema.dump(team))
+
+@routes.view("/team/{id}")
+class TeamDetailsApi(common.DetailsApi):
+  schema = TeamSchema()
+  
+  async def get(self):
+    _id = await self.get_object_id()
+
+    session = db.DBSession()
+    team = session.query(Team).filter(Team.id == _id).one()
+    return web.json_response(self.schema.dump(team))
+
+  async def patch(self):
+    _id = await self.get_object_id()
+    data = await self.request.json()
+
+    # HACK: exactly the same thing as schema.validate (validate against marshmallow without serializing)
+    # but directly raise marshmallow ValidationError instead of returning a dict of validation errors
+    self.schema._do_load(data, partial=True, postprocess=False)
+
+    try:
+      session = db.DBSession()
+      team = session.query(Team).filter(Team.id == _id).one()
+      common.patch_object(team, data)
+
+      session.commit()
+    except:
+      session.rollback()
+      raise
+
+    return web.json_response(self.schema.dump(team))
+
+  
+  async def delete(self):
+    _id = await self.get_object_id()
+
+    try:
+      session = db.DBSession()
+      team = session.query(Team).filter(Team.id == _id).one()
+      session.delete(team)
+
+      session.commit()
+    except:
+      session.rollback()
+      raise
+
+    raise web.HTTPNoContent

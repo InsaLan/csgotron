@@ -1,9 +1,10 @@
 from aiohttp import web
 from src.db import models as db
+from src.api.middlewares.exception import error_middleware
 
 def setup_aio():
   db.create_schema()
-  app = web.Application()
+  app = web.Application(middlewares=[error_middleware])
 
   from src.api import match, server, team
   app.router.add_routes(match.routes)

@@ -40,8 +40,8 @@ class ServerDetailsApi(common.DetailsApi):
     _id = await self.get_object_id()
 
     session = db.DBSession()
-    obj = session.query(Server).get(_id)
-    return web.json_response(self.schema.dump(obj))
+    server = session.query(Server).filter(Server.id == _id).one()
+    return web.json_response(self.schema.dump(server))
 
   async def patch(self):
     _id = await self.get_object_id()
