@@ -19,6 +19,9 @@
 3. Install dependencies: `pip3 install -r requirements.txt`
 4. Run the backend: `./main.py` 
 
+### Use in production
+1. `docker-compose up`
+
 ### TODO
 - [x] design the Database
 - [X] design the REST API
