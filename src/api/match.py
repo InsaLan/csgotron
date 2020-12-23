@@ -17,7 +17,6 @@ class MatchApi(web.View):
     qs = db.session.query(Match).all()
     return web.json_response(list(map(lambda m: self.response_schema.dump(m), qs)))
 
-  @auth_required
   async def post(self):
     data = await self.request.json()
     match = self.request_schema.load(data)
