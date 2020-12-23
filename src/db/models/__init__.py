@@ -36,5 +36,5 @@ def create_schema():
     from .Server import Server
     from .Team import Team
     from .Weapon import Weapon
-    
+
     Base.metadata.create_all(engine)

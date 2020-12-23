@@ -1,5 +1,5 @@
 from aiohttp import web
-from  ..db.models.ApiUser import ApiUser
+from ..db.models.ApiUser import ApiUser
 from marshmallow import Schema, fields, post_load
 
 class ApiUserRequestSchema(Schema):
@@ -9,7 +9,6 @@ class ApiUserRequestSchema(Schema):
 class ApiUserAuthSchema(Schema):
     username = fields.Str(required=True)
     password = fields.Str(required=True)
-
 
 class ApiUserTokenResponseSchema(Schema):
     token = fields.Str()
