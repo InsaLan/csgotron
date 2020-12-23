@@ -28,7 +28,6 @@ async def test_match_create(client):
 
     expected = {
       "playAllRound": True,
-      "password": "p!k@chu",
       "map": "de_dust",
       "streamerReady": False,
       "knifeRound": True,
@@ -52,7 +51,8 @@ async def test_match_create(client):
         "id": 2
       },
       "autostartMatch": True,
-      "state": "NOT_STARTED"
+      "state": "NOT_STARTED",
+      "password": "p!k@chu"
     }
 
     assert received_data == expected

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, UniqueConstraint
 from sqlalchemy_utils import PasswordType, force_auto_coercion
 
 from . import Base
@@ -7,7 +7,9 @@ force_auto_coercion()
 
 class ApiUser(Base):
     __tablename__ = 'apiUser'
-
+    __table_args__ =(
+        UniqueConstraint('username'),
+    )
     id = Column(Integer, primary_key=True)
     username = Column(String(50), nullable=False)
     password = Column(PasswordType(
@@ -15,3 +17,4 @@ class ApiUser(Base):
             'sha256_crypt',
         ],
     ))
+
