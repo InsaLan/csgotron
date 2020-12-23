@@ -4,5 +4,6 @@ sqlalchemy-utils
 passlib
 pytest-aiohttp
 marshmallow
+marshmallow_enum
 pyjwt
 aiorcon

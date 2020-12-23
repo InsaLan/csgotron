@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
@@ -8,11 +8,19 @@ session = None
 DBSession = None
 engine = None
 
+def _fk_pragma_on_connect(dbapi_con, con_record):
+    dbapi_con.execute('pragma foreign_keys=ON')
+
 def init_engine(filename):
     global Base
     global engine
 
-    engine = create_engine('sqlite:///{}'.format(filename), echo=True)
+    engine = create_engine('sqlite:///{}'.format(filename), echo=False)
+
+    # by default sqlite does not enforce FOREIGN KEY constraints,
+    # it needs to be activated manually
+    event.listen(engine, 'connect', _fk_pragma_on_connect)
+
     Base = declarative_base() 
 
 def flush_data():

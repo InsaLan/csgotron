@@ -51,7 +51,8 @@ async def test_match_create(client):
         "name": "Analyse",
         "id": 2
       },
-      "autostartMatch": True
+      "autostartMatch": True,
+      "state": "NOT_STARTED"
     }
 
     assert received_data == expected
@@ -82,7 +83,8 @@ async def test_match_list(client):
         "name": "Analyse",
         "id": 2
       },
-      "autostartMatch": True
+      "autostartMatch": True,
+      "state": "NOT_STARTED"
     }
 
     resp = await client.get('/match')
@@ -105,6 +107,7 @@ async def test_match_patch_match_params(client):
     received_data = await resp.json()
     
     expected_data = {
+      "state": "NOT_STARTED",
       "playAllRound": True,
       "password": "p!k@chu",
       "map": "de_dust",

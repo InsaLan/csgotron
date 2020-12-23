@@ -3,13 +3,31 @@ from marshmallow import Schema, fields, post_load
 
 from . import common
 from ..db import models as db
-from ..db.models.Match import Match
+from ..db.models.Match import Match, MatchState
 from ..serializers.match import MatchSchema
 from ..io.match_manager import MatchManager
 
 from .middlewares.auth import auth_required 
 routes = web.RouteTableDef()
 
+# Coroutine called when server is launched after DB is set up
+# This will ensure that for all NOT_STARTED matches, we will have a MatchManager
+async def rebuild_match_managers(app):
+  session = db.DBSession()
+  qs = session.query(Match).filter(Match.state == MatchState.NOT_STARTED)
+  for match in qs:
+    manager = MatchManager(match)
+    app['match_managers'][match.id] = manager    
+
+# Coroutine called when the server shuts down
+# All matches in progress will be put into state ENDED
+async def cleanup_matches(app):
+  session = db.DBSession()
+  qs = session.query(Match).filter(Match.state != MatchState.NOT_STARTED, Match.state != MatchState.ENDED)
+  for match in qs:
+    await app['match_managers'][match.id].end()
+    match.state = MatchState.ENDED
+  session.commit()
 
 @routes.view("/match")
 class MatchApi(web.View):
@@ -23,28 +41,24 @@ class MatchApi(web.View):
   async def post(self):
     data = await self.request.json()
     match = self.schema.load(data)
-    #match.state = MatchState.started
     match.firstSideT = 0
     match.firstSideCT = 0
     match.secondSideT = 0
     match.secondSideCT = 0
     match.firstSideTerrorist = 'A'
     match.mapSelectionMode = 'rng'
+    match.state = MatchState.NOT_STARTED
 
+    session = db.DBSession()
     try:
-      session = db.DBSession()
       session.add(match)
-      
       session.commit()    
     except:
       session.rollback()
       raise
 
-    manager = MatchManager(match.id)
-    await manager.setup()                                     
-                                                     
+    manager = MatchManager(match)
     self.request.app['match_managers'][match.id] = manager
-
 
     return web.json_response(self.schema.dump(match))
 
@@ -59,6 +73,13 @@ class MatchDetailsApi(common.DetailsApi):
     match = session.query(Match).filter(Match.id == _id).one()
     return web.json_response(self.schema.dump(match))
 
+  async def _process_update(self, manager, current_match, key, value):
+
+    if key == 'state':
+      if value == 'STARTING' and current_match.state == MatchState.NOT_STARTED:
+        await manager._update_match()
+        await manager.setup()
+
   async def patch(self):
     _id = await self.get_object_id()
     data = await self.request.json()
@@ -70,7 +91,15 @@ class MatchDetailsApi(common.DetailsApi):
     try:
       session = db.DBSession()
       match = session.query(Match).filter(Match.id == _id).one()
-      common.patch_object(match, data)
+
+      if not _id in self.request.app['match_managers']:
+        raise Exception("Match manager does not exist for match id {}".format(_id))
+
+      manager = self.request.app['match_managers'][_id]
+
+      for key, value in data.items():
+        await self._process_update(manager, match, key, value)
+        setattr(match, key, value)
 
       session.commit()
     except:
@@ -86,6 +115,13 @@ class MatchDetailsApi(common.DetailsApi):
     try:
       session = db.DBSession()
       match = session.query(Match).filter(Match.id == _id).one()
+      
+      if match.state not in [MatchState.NOT_STARTED, MatchState.ENDED]:
+        if not _id in self.request.app['match_managers']:
+          raise Exception("Match manager does not exist for match id {}".format(_id))
+
+        self.request.app['match_managers'][_id].end()
+
       session.delete(match)
 
       session.commit()
