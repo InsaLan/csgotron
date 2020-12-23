@@ -5,6 +5,7 @@ from . import common
 from ..db import models as db
 from ..db.models.Match import Match
 from ..serializers.match import MatchSchema
+from ..io.match_manager import MatchManager
 
 from .middlewares.auth import auth_required 
 routes = web.RouteTableDef()
@@ -33,10 +34,17 @@ class MatchApi(web.View):
     try:
       session = db.DBSession()
       session.add(match)
-      session.commit()
+      
+      session.commit()    
     except:
       session.rollback()
       raise
+
+    manager = MatchManager(match.id)
+    await manager.setup()                                     
+                                                     
+    self.request.app['match_managers'][match.id] = manager
+
 
     return web.json_response(self.schema.dump(match))
 

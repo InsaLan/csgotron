@@ -1,8 +1,11 @@
 import json
+import logging
 
 from aiohttp import web
 from sqlalchemy.orm.exc import NoResultFound
 from marshmallow import ValidationError
+
+logger = logging.getLogger(__name__)
 
 # https://gist.github.com/amitripshtos/854da3f4217e3441e8fceea85b0cbd91
 
@@ -11,6 +14,9 @@ def json_error(http_status: int,
                error_name = None,
                error_desc = None,
                error_additional = {}) -> web.Response:
+
+    logger.exception(exception)
+
     payload = {
       'error': {
         'name': error_name if (error_name) else exception.__class__.__name__, 
