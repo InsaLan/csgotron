@@ -5,15 +5,16 @@ import json, pytest, jwt
 
 async def test_apiUser_protected_route(client):
     # empty the database
-    db.session.query(db.ApiUser.ApiUser).delete()
-    db.session.add(db.ApiUser.ApiUser(username="John", password="password"))
-    db.session.commit()
+    session = db.DBSession()
+    session.add(db.ApiUser.ApiUser(username="John", password="password"))
+    session.commit()
 
     data = {
         "username": "John",
         "password": "password"
     }
     resp = await client.post('/login', data=json.dumps(data))
+    
     assert resp.status == 200
     result_data = await resp.json()
 

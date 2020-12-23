@@ -41,7 +41,7 @@ async def login(request):
         }
         jwt_token = jwt.encode(payload, SECRET_KEY, algorithm=JWT_ALGORITHM)
         session.commit()
-        return web.json_response({'token': jwt_token.decode('utf-8')})
+        return web.json_response({'token': jwt_token})
     except:
         session.rollback()
         raise
