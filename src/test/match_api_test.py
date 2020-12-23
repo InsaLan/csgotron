@@ -28,7 +28,6 @@ async def test_match_create(client):
 
     expected = {
       "playAllRound": True,
-      "password": "p!k@chu",
       "map": "de_dust",
       "streamerReady": False,
       "knifeRound": True,
