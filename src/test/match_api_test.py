@@ -50,7 +50,8 @@ async def test_match_create(client):
         "name": "Analyse",
         "id": 2
       },
-      "autostartMatch": True
+      "autostartMatch": True,
+      "password": "p!k@chu"
     }
 
     assert received_data == expected

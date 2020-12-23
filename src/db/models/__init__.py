@@ -12,7 +12,7 @@ def init_engine(filename):
     global Base
     global engine
 
-    engine = create_engine('sqlite:///{}'.format(filename), echo=True)
+    engine = create_engine('sqlite:///{}'.format(filename), echo=False)
     Base = declarative_base() 
 
 def flush_data():
