@@ -7,6 +7,10 @@ def setup_aio():
   app = web.Application(middlewares=[error_middleware, auth_middleware])
 
   from src.api import match, server, team, ApiUser
+
+  app.on_startup.append(match.rebuild_match_managers)
+  app.on_cleanup.append(match.cleanup_matches)
+
   app.router.add_routes(match.routes)
   app.router.add_routes(server.routes)
   app.router.add_routes(team.routes)

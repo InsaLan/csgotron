@@ -1,6 +1,7 @@
 from aiohttp import web
 from marshmallow import Schema, fields, post_load
-from ..db.models.Match import Match
+from marshmallow_enum import EnumField
+from ..db.models.Match import Match, MatchState
 
 from .server import ServerSchema
 from .team import TeamSchema
@@ -17,6 +18,7 @@ class MatchSchema(Schema):
   playAllRound = fields.Bool(missing=True)
   autostartMatch = fields.Bool(missing=True)
   maxRound = fields.Int()
+  state = EnumField(MatchState, missing=MatchState.NOT_STARTED)
 
   # Only in Requests
   idTeamA = fields.Int(required=True, load_only=True)
