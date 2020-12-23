@@ -1,7 +1,12 @@
 import asyncio
 import struct
+import logging
+
 
 class CSGOLogProtocol(asyncio.DatagramProtocol):
+  def __init__(self):
+    self.logger = logging.getLogger(__name__)
+
   def connection_made(self, transport):
     self.transport = transport
 
@@ -21,17 +26,7 @@ class CSGOLogProtocol(asyncio.DatagramProtocol):
       return
     
     message = data[7:-2].decode()
-    print('Received %r from %s' % (message, addr))
+    self.logger.warning("Received RCON message from {}: '{}'".format(addr, message))
 
     # TODO: call parser and call handling routine
 
-#async def main():
-#  t = await loop.create_datagram_endpoint(
-#    lambda: CSGOLogProtocol(),
-#    local_addr=('10.0.0.113', 8888))
-#  
-#  print("Server created")
-#
-#loop = asyncio.get_event_loop() 
-#loop.run_until_complete(main())
-#loop.run_forever()

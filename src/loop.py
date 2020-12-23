@@ -12,6 +12,8 @@ def setup_aio():
   app.router.add_routes(team.routes)
   app.router.add_routes(ApiUser.routes)
   
+  app['match_managers'] = {}
+  
   return app
 
 def create_loop():
