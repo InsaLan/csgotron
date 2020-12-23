@@ -4,5 +4,5 @@ sqlalchemy-utils
 passlib
 pytest-aiohttp
 marshmallow
-pyjwt
+pyjwt==2.0.0
 redis

@@ -1,8 +1,10 @@
 from aiohttp import web
 from marshmallow import Schema, fields, post_load
+
+from . import common
 from ..db import models as db
 from ..db.models.Match import Match
-from ..serializers.match import MatchRequestSchema, MatchResponseSchema
+from ..serializers.match import MatchSchema
 
 from .middlewares.auth import auth_required 
 routes = web.RouteTableDef()
@@ -10,16 +12,16 @@ routes = web.RouteTableDef()
 
 @routes.view("/match")
 class MatchApi(web.View):
-  request_schema = MatchRequestSchema()
-  response_schema = MatchResponseSchema()
+  schema = MatchSchema()
 
   async def get(self):
-    qs = db.session.query(Match).all()
-    return web.json_response(list(map(lambda m: self.response_schema.dump(m), qs)))
+    session = db.DBSession()
+    qs = session.query(Match).all()
+    return web.json_response(self.schema.dump(qs, many=True))
 
   async def post(self):
     data = await self.request.json()
-    match = self.request_schema.load(data)
+    match = self.schema.load(data)
     #match.state = MatchState.started
     match.firstSideT = 0
     match.firstSideCT = 0
@@ -36,4 +38,51 @@ class MatchApi(web.View):
       session.rollback()
       raise
 
-    return web.json_response(self.response_schema.dump(match))
+    return web.json_response(self.schema.dump(match))
+
+@routes.view("/match/{id}")
+class MatchDetailsApi(common.DetailsApi):
+  schema = MatchSchema()
+  
+  async def get(self):
+    _id = await self.get_object_id()
+
+    session = db.DBSession()
+    match = session.query(Match).filter(Match.id == _id).one()
+    return web.json_response(self.schema.dump(match))
+
+  async def patch(self):
+    _id = await self.get_object_id()
+    data = await self.request.json()
+
+    # HACK: exactly the same thing as schema.validate (validate against marshmallow without serializing)
+    # but directly raise marshmallow ValidationError instead of returning a dict of validation errors
+    self.schema._do_load(data, partial=True, postprocess=False)
+
+    try:
+      session = db.DBSession()
+      match = session.query(Match).filter(Match.id == _id).one()
+      common.patch_object(match, data)
+
+      session.commit()
+    except:
+      session.rollback()
+      raise
+
+    return web.json_response(self.schema.dump(match))
+
+  
+  async def delete(self):
+    _id = await self.get_object_id()
+
+    try:
+      session = db.DBSession()
+      match = session.query(Match).filter(Match.id == _id).one()
+      session.delete(match)
+
+      session.commit()
+    except:
+      session.rollback()
+      raise
+
+    raise web.HTTPNoContent
