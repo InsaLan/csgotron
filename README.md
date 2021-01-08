@@ -37,5 +37,13 @@
   - [x] rounds of a match
   - [ ] endpoints to interact with the server (stop, pause)
 - [x] Adding models
-
-
+- [ ] log parser
+  - [x] lexer
+  - [ ] grammar
+  - [ ] tests
+- [ ] auth
+  - [x] api
+  - [ ] tests
+- [ ] IO with server
+  - [x] receiving logs by server
+  - [ ] testing
