@@ -40,9 +40,11 @@ class MonLexer(object):
         'DQUOTE',
         'NAME',
         'STEAMID',
+        'HEADSHOT',
         #"SPACE",
 
     )
+    t_HEADSHOT = r'/s(headshot)'
     t_ATTACKED = r'\sattacked\s'
     t_HITGROUP = r'\s\(hitgroup\s"[a-z\s]+"\)'
     t_ATTACK = r'\s\((health|damage|damage_armor|armor)\s"[0-9]+"\)'
@@ -78,7 +80,11 @@ class MonLexer(object):
     #t_ID = r'[0-9]+'
     t_SAYTEAM = r'\ssay_team\s".*"'
     t_SAY = r'\ssay\s".*"'
-    t_STEAMID = r'(BOT|STEAM_[0-9:]+)'
+
+    def t_STEAMID(self,t):
+         r'(BOT|STEAM_[0-9:]+)'
+         return t
+
     #t_SPACE = r'\s'
     
 
