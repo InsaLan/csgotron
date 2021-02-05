@@ -1,5 +1,5 @@
 import ply.yacc as yacc
-from lexer import  MonLexer
+from .lexer import  MonLexer
 
 class MonParser(object):
     def test(self, data):
@@ -10,6 +10,7 @@ class MonParser(object):
         if the_lexer is None:
             the_lexer = MonLexer()
         self._lexer = the_lexer
+        the_lexer.build()
         self.tokens = self._lexer.tokens
 
         self._parser = yacc.yacc(module=self)
