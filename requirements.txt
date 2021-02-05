@@ -8,3 +8,5 @@ marshmallow_enum
 aiorcon
 pyjwt==2.0.0
 redis
+pyjwt
+ply
