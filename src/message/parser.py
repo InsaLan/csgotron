@@ -1,7 +1,17 @@
 import ply.yacc as yacc
 from .lexer import  MonLexer
 
+class BadMessageException(Exception):
+  pass
+
 class MonParser(object):
+    def parse(self, payload):
+        res = self._parser.parse(payload)
+        if res:
+          return res
+        else:
+          raise BadMessageException
+
     def test(self, data):
         res = self._parser.parse(data)
         print(res)
@@ -52,7 +62,6 @@ class MonParser(object):
            
 
     def p_error(self,p):
-            print("Syntax error in input!")
-    
-        
+            #print("Syntax error in input!")
+            pass
     
