@@ -7,6 +7,7 @@ class BadMessageException(Exception):
 class MonParser(object):
     def parse(self, payload):
         res = self._parser.parse(payload)
+        #print(res)
         if res:
           return res
         else:
@@ -24,6 +25,13 @@ class MonParser(object):
         self.tokens = self._lexer.tokens
 
         self._parser = yacc.yacc(module=self)
+
+
+    def p_term_player_enter_leave(self,p):
+            '''expression : pterm ENTERED
+                            | pterm DISCONNECTED REASON'''
+            p[0] = p[1]
+
     def p_expression_assist(self,p):
             'expression : pterm ASSIST pterm'
             p[0]= p[1] + p[2] + p[3] 
@@ -52,16 +60,15 @@ class MonParser(object):
     def p_term_player(self,p):
             'pterm : NAME LOWER STEAMID UPPER TEAMQ'
             p[0]= p[1] +p[2]+p[3]+p[4]+p[5]
-
   
 
-    #def p_term_steam_id(self,p):
-     #   'tSTEAM_ID : STEAM_ID'
-      #  p[0]= p[1]
-         
-           
+    def p_term_round_messages(self,p):
+          '''expression : ROUND_START
+                          | ROUND_END 
+                          | ROUND_SPAWN'''
+          p[0] = p[1]
 
     def p_error(self,p):
-            #print("Syntax error in input!")
+            #print("Syntax error in input!", p)
             pass
     

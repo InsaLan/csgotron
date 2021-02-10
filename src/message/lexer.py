@@ -42,6 +42,8 @@ class MonLexer(object):
         'STEAMID',
         'HEADSHOT',
         #"SPACE",
+        'DISCONNECTED',
+        'REASON',
 
     )
     t_HEADSHOT = r'/s(headshot)'
@@ -70,7 +72,7 @@ class MonLexer(object):
     t_KILLED = r'\skilled\s'
     t_WITH = r'\swith\s' 
     t_TEAM = r'<(TERRORIST|CT|Unassigned|Spectator)>'
-    t_TEAMQ = r'<(TERRORIST|CT|Unassigned|Spectator)>"'
+    t_TEAMQ = r'<(TERRORIST|CT|Unassigned|Spectator|)>"'
     t_LOWER = r'<'
     t_UPPER = r'>'
     t_NUMBER = r'[0-9]+'
@@ -80,6 +82,8 @@ class MonLexer(object):
     #t_ID = r'[0-9]+'
     t_SAYTEAM = r'\ssay_team\s".*"'
     t_SAY = r'\ssay\s".*"'
+    t_DISCONNECTED = r'\sdisconnected\s'
+    t_REASON = r'(reason\s".*")'
 
     def t_STEAMID(self,t):
          r'(BOT|STEAM_[0-9:]+)'

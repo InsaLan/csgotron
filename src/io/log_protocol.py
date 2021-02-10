@@ -32,9 +32,10 @@ class CSGOLogProtocol(asyncio.DatagramProtocol):
     timestamp = data[7:28].decode()
     message = data[30:-2].decode()
 
-    self.logger.debug("Recv log from {}, timestamp: '{}', message: '{}'".format(addr, timestamp, message[:65] + (message[65:] and '...')))
+    #self.logger.debug("Recv log from {}, timestamp: '{}', message: '{}'".format(addr, timestamp, message[:65] + (message[65:] and '...')))
 
     try:
-      self.parser.parse(message)
+      x = self.parser.parse(message)
+      #self.logger.info("MESSAGE HANDLED {}".format(x))
     except BadMessageException:
       self.logger.warning("Message '{}' at timestamp: '{}' was not handled by parser".format(message[:65] + (message[65:] and '...'),timestamp))
