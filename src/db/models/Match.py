@@ -18,8 +18,8 @@ class Match(Base):
     __tablename__ = 'match'
 
     id = Column(Integer, primary_key=True)
-    idTeamA  = Column(Integer, ForeignKey('team.id'))
-    idTeamB  = Column(Integer, ForeignKey('team.id'))
+    idTeamFirstSideT  = Column(Integer, ForeignKey('team.id'))
+    idTeamFirstSideCT  = Column(Integer, ForeignKey('team.id'))
     idServer = Column(Integer, ForeignKey('server.id'))
     password = Column(String(200), nullable=False)
     map      = Column(String(50), nullable=False)
@@ -30,7 +30,6 @@ class Match(Base):
     streamerReady = Column(Boolean)
     playAllRound = Column(Boolean)
     autostartMatch = Column(Boolean)
-    firstSideTerrorist = Column(String(1), nullable=False)
     firstSideT = Column(Integer, nullable=False)
     firstSideCT = Column(Integer, nullable=False)
     secondSideT = Column(Integer, nullable=False)
@@ -40,8 +39,8 @@ class Match(Base):
     state = Column(Enum(MatchState))
     
     server = relationship("Server", lazy='joined')
-    teamA = relationship("Team", foreign_keys=[idTeamA])
-    teamB = relationship("Team", foreign_keys=[idTeamB])
+    teamFirstSideT = relationship("Team", foreign_keys=[idTeamFirstSideT])
+    teamFirstSideCT = relationship("Team", foreign_keys=[idTeamFirstSideCT])
 
     def __repr__(self):
       return "<Match id={}, team {} vs {}>".format(self.id, self.idTeamA, self.idTeamB)

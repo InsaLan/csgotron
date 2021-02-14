@@ -3,4 +3,6 @@ import json, pytest
 
 async def test_parse_simple_log():
   p = MonParser()
-  p.parse("\"darkgallium<5><STEAM_1:1:64417199><Unassigned>\" disconnected (reason \"Disconnect\")")
+  print(p.parse('"Jeff<22><BOT>" switched from team <Unassigned> to <TERRORIST>'))
+  assert False
+
