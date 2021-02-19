@@ -21,14 +21,14 @@ class MatchSchema(Schema):
   state = EnumField(MatchState, missing=MatchState.NOT_STARTED)
 
   # Only in Requests
-  idTeamA = fields.Int(required=True, load_only=True)
-  idTeamB = fields.Int(required=True, load_only=True)
+  idTeamFirstSideT = fields.Int(required=True, load_only=True)
+  idTeamFirstSideCT = fields.Int(required=True, load_only=True)
   idServer = fields.Int(required=True, load_only=True)
 
   # Only in Responses
   server = fields.Nested(ServerSchema, dump_only=True)
-  teamA = fields.Nested(TeamSchema, dump_only=True)
-  teamB = fields.Nested(TeamSchema, dump_only=True)
+  teamFirstSideT = fields.Nested(TeamSchema, dump_only=True)
+  teamFirstSideCT = fields.Nested(TeamSchema, dump_only=True)
   
   @post_load
   def make_match(self, data, **kwargs):

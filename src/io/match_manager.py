@@ -7,18 +7,20 @@ from ..db.models.Match import Match
 from .log_protocol import CSGOLogProtocol
 
 class MatchManager:
+  confinebot_ip = '10.0.0.157'
   next_log_port = 25555
-  confinebot_ip = '10.0.0.113' # FIXME: replace by config parameter
   
   def __init__(self, match):
     self.match = match
     self.logger = logging.getLogger(__name__)
 
   async def _update_match(self):
-    session = db.DBSession()
-    self.match = session.query(Match).filter(Match.id == self.match.id).one()
+    self.session = db.DBSession()
+    self.match = self.session.query(Match).filter(Match.id == self.match.id).one()
 
   async def setParameters(self):
+    await self._update_match()
+
     await(self.rcon("mp_overtime_maxrounds {}".format(self.match.maxRound)))
 
     if self.match.overtime:
@@ -39,7 +41,7 @@ class MatchManager:
  
     # setup log listener
     self.log_transport, _ = await loop.create_datagram_endpoint(lambda: CSGOLogProtocol(self),
-                                                    local_addr=(MatchManager.confinebot_ip, self.log_port))
+                                                    local_addr=('0.0.0.0', self.log_port))
 
     # send setup RCON commands
     await(self.rcon("log on; mp_logdetail 3;"))

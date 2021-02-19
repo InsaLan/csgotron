@@ -77,7 +77,6 @@ class MatchDetailsApi(common.DetailsApi):
 
     if key == 'state':
       if value == 'STARTING' and current_match.state == MatchState.NOT_STARTED:
-        await manager._update_match()
         await manager.setup()
 
   async def patch(self):

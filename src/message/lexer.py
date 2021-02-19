@@ -22,7 +22,6 @@ class MonLexer(object):
         'P',
         'TO',
         'SWITCHTEAM',
-        #'JOINTEAM',
         'THREW',
         'KILLED',
         'WITH',
@@ -36,13 +35,16 @@ class MonLexer(object):
         'WEAPON',
         'ASSIST',
         'STUFF',
-        #'ID',
         'DQUOTE',
         'NAME',
         'STEAMID',
         'HEADSHOT',
-        #"SPACE",
-
+        'DISCONNECTED',
+        'REASON',
+        'STEAMIDPREFIX',
+        'ELLIPSIS',
+        'BOT',
+        'SWITCH',
     )
     t_HEADSHOT = r'/s(headshot)'
     t_ATTACKED = r'\sattacked\s'
@@ -69,26 +71,41 @@ class MonLexer(object):
     t_WEAPON = r'"[A-Za-z][a-zA-Z0-9\s_]+"'
     t_KILLED = r'\skilled\s'
     t_WITH = r'\swith\s' 
-    t_TEAM = r'<(TERRORIST|CT|Unassigned|Spectator)>'
-    t_TEAMQ = r'<(TERRORIST|CT|Unassigned|Spectator)>"'
     t_LOWER = r'<'
     t_UPPER = r'>'
     t_NUMBER = r'[0-9]+'
     t_POS = r'\s\[-?[0-9]+\s-?[0-9]+\s-?[0-9]+\]'
     t_DQUOTE = r'"' 
-    t_NAME = r'".{2,32}<[0-9]{1,2}>'
-    #t_ID = r'[0-9]+'
     t_SAYTEAM = r'\ssay_team\s".*"'
     t_SAY = r'\ssay\s".*"'
+    t_DISCONNECTED = r'\sdisconnected\s'
+    t_REASON = r'(reason\s".*")'
+    t_STEAMIDPREFIX = r'STEAM_'
+    t_ELLIPSIS = r':'
+    t_BOT = r'BOT'
+    t_SWITCH = r'\sswitched\sfrom\steam\s'
 
-    def t_STEAMID(self,t):
-         r'(BOT|STEAM_[0-9:]+)'
-         return t
 
-    #t_SPACE = r'\s'
+    def t_TEAM(self,t):
+       r'<(TERRORIST|CT|Unassigned|Spectator)>'
+       t.value = t.value[1:-1]
+       return t
+
+    def t_TEAMQ(self,t):
+       r'<(TERRORIST|CT|Unassigned|Spectator|)>"'
+       t.value = t.value[1:-2]
+       return t
     
+    def t_NAME(self,t):
+       r'"(.{2,32}<[0-9]{1,2}>)'
+       a = t.value.split('<')
 
-
+       # return a tuple (name,uid), the separation can't be done in the 
+       # parser due to the ambiguousness brought by .{2,32}
+       # here we split the name and the uid, but as the name can contain '<' characters,
+       # we only split at the last '<' character
+       t.value = ('<'.join(a[:len(a)-1])[1:], int(a[len(a)-1][:-1]))
+       return t
 
     def t_error(self,t):
          print("Illegal character '%s'" % t.value[0])
