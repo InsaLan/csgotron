@@ -43,4 +43,4 @@ class Match(Base):
     teamFirstSideCT = relationship("Team", foreign_keys=[idTeamFirstSideCT])
 
     def __repr__(self):
-      return "<Match id={}, team {} vs {}>".format(self.id, self.idTeamA, self.idTeamB)
+      return "<Match id={}, team {} vs {}>".format(self.id, self.idTeamFirstSideT, self.idTeamFirstSideCT)

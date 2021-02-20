@@ -7,7 +7,7 @@ from ..db.models.Match import Match
 from .log_protocol import CSGOLogProtocol
 
 class MatchManager:
-  confinebot_ip = '10.0.0.157'
+  confinebot_ip = '192.168.1.37'
   next_log_port = 25555
   
   def __init__(self, match):
@@ -26,16 +26,16 @@ class MatchManager:
     if self.match.overtime:
       await(self.rcon("mp_overtime_enable 1"))
 
-    await(self.rcon("mp_teamname_1 \"{}\"".format(self.match.teamA.name)))
-    await(self.rcon("mp_teamname_2 \"{}\"".format(self.match.teamB.name)))
+    await(self.rcon("mp_teamname_1 \"{}\"".format(self.match.teamFirstSideT.name)))
+    await(self.rcon("mp_teamname_2 \"{}\"".format(self.match.teamFirstSideCT.name)))
 
   async def setup(self):
     self.logger.info("Setting up match id={}".format(self.match.id))
     loop = asyncio.get_event_loop()
 
     # setup RCON
-    self.rcon = await RCON.create(str(self.match.server.ip), self.match.server.port, self.match.password, loop)
-   
+    self.rcon = await RCON.create(str(self.match.server.ip), self.match.server.port, self.match.password, loop, timeout=1, auto_reconnect_attempts=0)
+
     self.log_port = MatchManager.next_log_port
     MatchManager.next_log_port += 1
  
