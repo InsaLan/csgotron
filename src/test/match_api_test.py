@@ -219,6 +219,9 @@ async def test_match_setup(client, rcon_server):
 
     assert received_data == expected
 
+    resp = await client.patch('/match/1', data=json.dumps({'state': 'STARTING'}))
+    assert resp.status == 200
+
     auth_request = rcon_server.expect(0, valve.rcon.RCONMessage.Type.AUTH, b"p!k@chu")
     auth_request.respond(0, valve.rcon.RCONMessage.Type.AUTH_RESPONSE, b"")
 
@@ -230,10 +233,6 @@ async def test_match_setup(client, rcon_server):
       "mp_teamname_1 \"Algebre\"",
       "mp_teamname_2 \"Analyse\"",
     ])
-
-
-    resp = await client.patch('/match/1', data=json.dumps({'state': 'STARTING'}))
-    assert resp.status == 200
 
     resp = await client.patch('/match/1', data=json.dumps({'state': 'ENDED'}))
     assert resp.status == 200
