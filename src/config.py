@@ -18,7 +18,7 @@ class LogLevel(Enum):
 class ConfigSchema(Schema):
     log_level = EnumField(LogLevel, missing=LogLevel.WARNING)
     listen_addr = fields.IP(required=True)
-    log_port_range = fields.Tuple((fields.Integer(), fields.Integer()))
+    log_port_range = fields.Tuple((fields.Integer(), fields.Integer()), required=True)
 
     @post_load
     def make_config(self, data, **kwargs):
@@ -26,12 +26,13 @@ class ConfigSchema(Schema):
 
 @dataclass
 class Config:
-    log_level: int
+    log_level: LogLevel
     listen_addr: Union[IPv4Address, IPv6Address]
     log_port_range: Tuple[int, int]
 
 def populate_config():
     try:
+        # TODO: add a CLI param for the config file path
         with open("config.toml", "r") as f:
             try:
                 d = toml.loads("".join(f.readlines()))
