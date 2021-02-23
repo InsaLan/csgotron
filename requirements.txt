@@ -5,7 +5,7 @@ passlib
 pytest-aiohttp
 marshmallow
 marshmallow_enum
-aiorcon
+git+https://github.com/InsaLan/aiorcon.git
 pyjwt==2.0.0
 redis
 pyjwt

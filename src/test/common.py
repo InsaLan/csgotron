@@ -16,7 +16,7 @@ def client(loop, aiohttp_client):
 
 @pytest.yield_fixture
 def rcon_server():
-    server = valve.testing.TestRCONServer()
+    server = valve.testing.TestRCONServer(address=('127.0.0.1',25555))
     thread = threading.Thread(target=server.serve_forever)
     thread.start()
     yield server
