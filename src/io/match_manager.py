@@ -44,7 +44,7 @@ class MatchManager:
  
     # setup log listener
     self.log_transport, _ = await loop.create_datagram_endpoint(lambda: CSGOLogProtocol(self),
-                                                    local_addr=(config.listen_addr, self.log_port))
+                                                    local_addr=(str(config.listen_addr), self.log_port))
 
     # send setup RCON commands
     await(self.rcon("log on; mp_logdetail 3;"))
