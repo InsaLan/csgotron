@@ -2,10 +2,12 @@ import asyncio
 import logging
 from aiorcon import RCON
 
-from src.config import config
+from src.config import ConfigStore
 from src.db import models as db
 from src.db.models.Match import Match
 from .log_protocol import CSGOLogProtocol
+
+config = ConfigStore.cfg
 
 class MatchManager:
   next_log_port = config.log_port_range[0]
@@ -48,8 +50,9 @@ class MatchManager:
 
     # send setup RCON commands
     await(self.rcon("log on; mp_logdetail 3;"))
+    
+    print("xxx",config.listen_addr, self.log_port)
     await(self.rcon("logaddress_del {}:{}; logaddress_add {}:{}".format(config.listen_addr, self.log_port, config.listen_addr, self.log_port)))
-
     await self.setParameters()    
 
   async def end(self):

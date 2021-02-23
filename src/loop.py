@@ -1,7 +1,7 @@
 import redis, logging
 from aiohttp import web
 from src.db import models as db
-from src.config import config
+from src.config import ConfigStore, load_config_from_file
 from src.api.middlewares import auth_middleware, error_middleware
 
 redis_database = redis.Redis(host='localhost', port=6379, db=0)
@@ -25,7 +25,8 @@ def setup_aio():
   return app
 
 def create_loop():
-   logging.basicConfig(level=config.log_level.value)
+   ConfigStore.cfg = load_config_from_file()
+   logging.basicConfig(level=ConfigStore.cfg.log_level.value)
    
    db.init_engine("confinebot.db")
    return setup_aio()

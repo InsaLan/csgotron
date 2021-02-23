@@ -6,7 +6,7 @@ log_level = 'DEBUG'
 # this needs to be reachable from the csgo server instances
 # required field
 
-listen_addr = "192.168.1.37"
+listen_addr = "127.0.0.1"
 
 # confinebot will allocate one port per match to listen to
 # the server logs sent by csgo server instances

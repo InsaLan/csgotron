@@ -169,7 +169,8 @@ async def test_match_setup(client, rcon_server):
     db.session.query(db.Team.Team).delete()
 
     p = rcon_server.server_address[1]
-  
+    print(rcon_server.server_address) 
+     
     db.session.add(db.Server.Server(ip="127.0.0.1", port=p, nickname="perdu"))
     db.session.add(db.Team.Team(name="Algebre", nationality="France"))
     db.session.add(db.Team.Team(name="Analyse", nationality="France"))
@@ -219,20 +220,20 @@ async def test_match_setup(client, rcon_server):
 
     assert received_data == expected
 
-    resp = await client.patch('/match/1', data=json.dumps({'state': 'STARTING'}))
-    assert resp.status == 200
-
     auth_request = rcon_server.expect(0, valve.rcon.RCONMessage.Type.AUTH, b"p!k@chu")
     auth_request.respond(0, valve.rcon.RCONMessage.Type.AUTH_RESPONSE, b"")
 
     await assert_rcon_messages(rcon_server, [
       "log on; mp_logdetail 3;",
-      "logaddress_del 10.0.0.157:25555; logaddress_add 10.0.0.157:25555",
+      "logaddress_del 127.0.0.1:30000; logaddress_add 127.0.0.1:30000",
       "mp_overtime_maxrounds 32",
       "mp_overtime_enable 1",
       "mp_teamname_1 \"Algebre\"",
       "mp_teamname_2 \"Analyse\"",
     ])
+
+    resp = await client.patch('/match/1', data=json.dumps({'state': 'STARTING'}))
+    assert resp.status == 200
 
     resp = await client.patch('/match/1', data=json.dumps({'state': 'ENDED'}))
     assert resp.status == 200

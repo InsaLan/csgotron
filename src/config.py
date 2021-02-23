@@ -30,7 +30,10 @@ class Config:
     listen_addr: Union[IPv4Address, IPv6Address]
     log_port_range: Tuple[int, int]
 
-def populate_config():
+class ConfigStore:
+    cfg: Config
+
+def load_config_from_file():
     try:
         # TODO: add a CLI param for the config file path
         with open("config.toml", "r") as f:
@@ -48,4 +51,3 @@ def populate_config():
         logger.error("Could not open config.toml file in your current working dir")
         sys.exit(1)
 
-config = populate_config()
