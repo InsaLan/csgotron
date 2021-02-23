@@ -10,3 +10,4 @@ pyjwt==2.0.0
 redis
 pyjwt
 ply
+toml==0.10.2
