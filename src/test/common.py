@@ -5,9 +5,7 @@ from ..db import models as db
 from ..db import Cache
 from ..config import ConfigStore, LogLevel, Config
 from ipaddress import IPv4Address
-
-import socketserver, copy
-from valve.testing import _TestRCONHandler, ExpectedRCONMessage
+from valve.testing import TestRCONServer
 
 if db.engine == None:
     # special filename "" means in-memory database
