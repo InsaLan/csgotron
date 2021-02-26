@@ -1,5 +1,6 @@
 from aiohttp import web
-from ..common import client
+
+from src.test.common import client
 from src.db import models as db
 from src.io.event_handlers.switch_team import *
 

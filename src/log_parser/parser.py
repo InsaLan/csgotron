@@ -1,11 +1,12 @@
 import ply.yacc as yacc
-from .lexer import  MonLexer
+
+from src.log_parser.lexer import LogLexer
 from src.io.event_handlers.switch_team import SwitchTeamEventHandler
 
 class BadMessageException(Exception):
   pass
 
-class MonParser(object):
+class LogParser(object):
     def parse(self, payload):
         res = self._parser.parse(payload)
         #print(res)
@@ -20,7 +21,7 @@ class MonParser(object):
 
     def __init__(self, the_lexer=None):
         if the_lexer is None:
-            the_lexer = MonLexer()
+            the_lexer = LogLexer()
         self._lexer = the_lexer
         the_lexer.build()
         self.tokens = self._lexer.tokens

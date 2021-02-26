@@ -1,6 +1,6 @@
 import ply.lex as lex
 
-class MonLexer(object):
+class LogLexer(object):
 
     tokens = ( 
         'ATTACKED',

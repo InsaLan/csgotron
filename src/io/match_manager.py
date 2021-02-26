@@ -2,9 +2,9 @@ import asyncio
 import logging
 from aiorcon import RCON
 
-from ..db import models as db
-from ..db.models.Match import Match
-from .log_protocol import CSGOLogProtocol
+from src.db import models as db
+from src.db.models.Match import Match
+from src.io.log_protocol import CSGOLogProtocol
 
 class MatchManager:
   confinebot_ip = '192.168.1.37'

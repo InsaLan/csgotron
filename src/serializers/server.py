@@ -1,7 +1,7 @@
 from aiohttp import web
-from ..db.models.Server import Server
 from marshmallow import Schema, fields, post_load
 
+from src.db.models.Server import Server
 
 class ServerSchema(Schema):
   id = fields.Int(dump_only=True)

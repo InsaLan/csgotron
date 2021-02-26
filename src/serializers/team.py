@@ -1,7 +1,7 @@
 from aiohttp import web
-from ..db.models.Team import Team
 from marshmallow import Schema, fields, post_load
 
+from src.db.models.Team import Team
 
 class TeamSchema(Schema):
   id = fields.Int()

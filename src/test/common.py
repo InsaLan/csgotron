@@ -1,8 +1,10 @@
 import pytest, os
 from aiohttp import web
-from ..loop import setup_aio
-from ..db import models as db
-from ..db import Cache
+
+from src.loop import setup_aio
+from src.db import models as db
+from src.db import Cache
+
 if db.engine == None:
     # special filename "" means in-memory database
     db.init_engine("")

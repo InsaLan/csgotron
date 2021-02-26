@@ -1,7 +1,8 @@
 import asyncio
 import struct
 import logging
-from ..message.parser import MonParser, BadMessageException
+
+from src.log_parser.parser import LogParser, BadMessageException
 
 class CSGOLogProtocol(asyncio.DatagramProtocol):
   def __init__(self, match_manager):

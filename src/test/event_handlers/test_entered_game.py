@@ -1,9 +1,9 @@
 from aiohttp import web
-from ..common import client
+import json, pytest
+
+from src.test.common import client
 from src.db import models as db
 from src.io.event_handlers.entered_game import *
-
-import json, pytest
 
 async def test_bot_enter_game(client):
     # ensure table is empty before creating Object

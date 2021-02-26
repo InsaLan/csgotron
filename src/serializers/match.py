@@ -1,10 +1,10 @@
 from aiohttp import web
 from marshmallow import Schema, fields, post_load
 from marshmallow_enum import EnumField
-from ..db.models.Match import Match, MatchState
 
-from .server import ServerSchema
-from .team import TeamSchema
+from src.db.models.Match import Match, MatchState
+from src.serializers.server import ServerSchema
+from src.serializers.team import TeamSchema
 
 class MatchSchema(Schema):
   id = fields.Int()

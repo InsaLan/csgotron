@@ -2,12 +2,12 @@ from aiohttp import web
 from marshmallow import Schema, fields, post_load
 
 from . import common
-from ..db import models as db
-from ..db.models.Match import Match, MatchState
-from ..serializers.match import MatchSchema
-from ..io.match_manager import MatchManager
+from src.db import models as db
+from src.db.models.Match import Match, MatchState
+from src.serializers.match import MatchSchema
+from src.io.match_manager import MatchManager
+from src.api.middlewares.auth import auth_required 
 
-from .middlewares.auth import auth_required 
 routes = web.RouteTableDef()
 
 # Coroutine called when server is launched after DB is set up
@@ -15,18 +15,22 @@ routes = web.RouteTableDef()
 async def rebuild_match_managers(app):
   session = db.DBSession()
   qs = session.query(Match).filter(Match.state == MatchState.NOT_STARTED)
+
   for match in qs:
     manager = MatchManager(match)
     app['match_managers'][match.id] = manager    
+
 
 # Coroutine called when the server shuts down
 # All matches in progress will be put into state ENDED
 async def cleanup_matches(app):
   session = db.DBSession()
   qs = session.query(Match).filter(Match.state != MatchState.NOT_STARTED, Match.state != MatchState.ENDED)
+
   for match in qs:
     await app['match_managers'][match.id].end()
     match.state = MatchState.ENDED
+
   session.commit()
 
 @routes.view("/match")
