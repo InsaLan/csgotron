@@ -8,7 +8,7 @@ class CSGOLogProtocol(asyncio.DatagramProtocol):
   def __init__(self, match_manager):
     self.logger = logging.getLogger(__name__)
     self.match_manager = match_manager
-    self.parser = MonParser()
+    self.parser = LogParser()
 
   def connection_made(self, transport):
     self.transport = transport

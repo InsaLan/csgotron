@@ -1,0 +1,15 @@
+# verbosity of stdout output
+# defaults to WARNING if not set
+log_level = 'DEBUG'
+
+# address to which the server logs will be sent
+# this needs to be reachable from the csgo server instances
+# required field
+
+listen_addr = "127.0.0.1"
+
+# confinebot will allocate one port per match to listen to
+# the server logs sent by csgo server instances
+# required field
+
+log_port_range = [25555, 26000]

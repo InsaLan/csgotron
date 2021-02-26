@@ -82,6 +82,9 @@ class MatchDetailsApi(common.DetailsApi):
     if key == 'state':
       if value == 'STARTING' and current_match.state == MatchState.NOT_STARTED:
         await manager.setup()
+      
+      elif value == 'ENDED' and current_match.state != MatchState.NOT_STARTED:
+        await manager.end()
 
   async def patch(self):
     _id = await self.get_object_id()
@@ -123,7 +126,7 @@ class MatchDetailsApi(common.DetailsApi):
         if not _id in self.request.app['match_managers']:
           raise Exception("Match manager does not exist for match id {}".format(_id))
 
-        self.request.app['match_managers'][_id].end()
+        await self.request.app['match_managers'][_id].end()
 
       session.delete(match)
 
