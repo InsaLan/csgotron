@@ -1,8 +1,10 @@
+import logging
+
 from . import EventHandler
 from src.db import models as db
 from src.db.models.Match import Match
 from src.db.models.Player import Player
-import logging
+from src.exceptions.EventHandler import *
 
 class SwitchTeamEventHandler(EventHandler):
   def __init__(self,
@@ -45,7 +47,7 @@ class SwitchTeamEventHandler(EventHandler):
         # Although the first part seem unlikely to happen, the second can happen in practice as the log protocol is over UDP !
 
         self.logger.error("SwitchTeamEvent with non existant player id = {}".format(self.player_steam_id))
-        return
+        raise ReferenceToNonexistentPlayer
 
       player = qs.one()
 

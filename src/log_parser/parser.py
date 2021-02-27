@@ -1,7 +1,10 @@
 import ply.yacc as yacc
 
 from src.log_parser.lexer import LogLexer
-from src.io.event_handlers.switch_team import SwitchTeamEventHandler
+
+from src.io.event_handlers.switch_team import *
+from src.io.event_handlers.entered_game import *
+from src.io.event_handlers.kill import *
 
 class BadMessageException(Exception):
   pass
@@ -28,23 +31,22 @@ class LogParser(object):
 
         self._parser = yacc.yacc(module=self)
 
-
-#    def p_term_player_enter_leave(self,p):
-#            '''expression : pterm ENTERED
-#                            | pterm DISCONNECTED REASON'''
-#            p[0] = p[1]
-
     def p_expression_entered_game(self, p):
             'expression : pterm ENTERED'
-            p[0] = "{}".format(p[1])
-            #self.out = 
+            pterm = p[1]
+            p[0] = "{}".format(pterm)
+            self.out = EnteredGameEventHandler(player_name=pterm[0][0],
+                                               player_uid=pterm[0][1],
+                                               player_steam_id=pterm[1])
 
     def p_expression_switch(self,p):
             'expression : pterm SWITCH TEAM TO TEAM'
-            p[0] = "{} {} {}".format(p[1], p[3], p[5])
-            #p[0] = p[1] 
-            #self.out = SwitchTeamEventHandler(
-
+            pterm = p[1]
+            p[0] = "{} {} {}".format(pterm, p[3], p[5])
+            self.out = SwitchTeamEventHandler(player_uid=pterm[0][1],
+                                              player_steam_id=pterm[1],
+                                              src_team=p[3],
+                                              dst_team=p[5])
 
     def p_expression_assist(self,p):
             'expression : pterm ASSIST pterm'
@@ -67,6 +69,14 @@ class LogParser(object):
                             | pterm POS KILLED pterm POS WITH WEAPON HEADSHOT'''
             if len(p)==8 :
                 p[0] = "{} {} {} {} {} {}".format(p[1], p[2], p[3], p[4], p[5], p[7], " false")
+                self.out = KillEventHandler(pterm_killer = p[1],
+                                            pos_killer = p[2],
+                                            pterm_victim = p[4],
+                                            pos_victim = p[5],
+                                            weapon = p[7],
+                                            is_headshot = False)
+
+
             else :
                 p[0] = "{} {} {} {} {} {}".format(p[1], p[2], p[3], p[4], p[5], p[7], " true")
   
