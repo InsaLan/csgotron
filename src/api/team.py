@@ -1,11 +1,10 @@
-from . import common
-
 from aiohttp import web
 from marshmallow import Schema, fields, post_load
 
-from ..db import models as db
-from ..db.models.Team import Team
-from ..serializers.team import TeamSchema
+from . import common
+from src.db import models as db
+from src.db.models.Team import Team
+from src.serializers.team import TeamSchema
 
 routes = web.RouteTableDef()
 

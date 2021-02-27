@@ -1,11 +1,12 @@
 import pytest, os, threading
 from aiohttp import web
-from ..loop import setup_aio
-from ..db import models as db
-from ..db import Cache
-from ..config import ConfigStore, LogLevel, Config
 from ipaddress import IPv4Address
 from valve.testing import TestRCONServer
+
+from src.loop import setup_aio
+from src.db import models as db
+from src.db import Cache
+from src.config import ConfigStore, LogLevel, Config
 
 if db.engine == None:
     # special filename "" means in-memory database

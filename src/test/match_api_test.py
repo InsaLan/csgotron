@@ -1,7 +1,8 @@
 from aiohttp import web
-from .common import client, rcon_server 
-from ..db import models as db
 import json, pytest, valve.rcon
+
+from .common import client, rcon_server
+from src.db import models as db
 
 async def test_match_create(client):
     # ensure table is empty before creating Object
@@ -14,8 +15,8 @@ async def test_match_create(client):
     db.session.commit()
 
     data = {
-        "idTeamA": 1,
-        "idTeamB": 2,
+        "idTeamFirstSideT": 1,
+        "idTeamFirstSideCT": 2,
         "idServer": 1,
         "map": "de_dust",
         "maxRound": 32,
@@ -39,13 +40,13 @@ async def test_match_create(client):
       },
       "id": 1,
       "maxRound": 32,
-      "teamA": {
+      "teamFirstSideT": {
         "nationality": "France",
         "name": "Algebre",
         "id": 1
       },
       "overtime": True,
-      "teamB": {
+      "teamFirstSideCT": {
         "nationality": "France",
         "name": "Analyse",
         "id": 2
@@ -72,13 +73,13 @@ async def test_match_list(client):
       },
       "id": 1,
       "maxRound": 32,
-      "teamA": {
+      "teamFirstSideT": {
         "nationality": "France",
         "name": "Algebre",
         "id": 1
       },
       "overtime": True,
-      "teamB": {
+      "teamFirstSideCT": {
         "nationality": "France",
         "name": "Analyse",
         "id": 2
@@ -121,13 +122,13 @@ async def test_match_patch_match_params(client):
       },
       "id": 1,
       "maxRound": 64,
-      "teamA": {
+      "teamFirstSideT": {
         "nationality": "France",
         "name": "Algebre",
         "id": 1
       },
       "overtime": False,
-      "teamB": {
+      "teamFirstSideCT": {
         "nationality": "France",
         "name": "Analyse",
         "id": 2
@@ -177,8 +178,8 @@ async def test_match_setup(client, rcon_server):
     db.session.commit()
 
     data = {
-        "idTeamA": 1,
-        "idTeamB": 2,
+        "idTeamFirstSideT": 1,
+        "idTeamFirstSideCT": 2,
         "idServer": 1,
         "map": "de_dust",
         "maxRound": 32,
@@ -202,13 +203,13 @@ async def test_match_setup(client, rcon_server):
       },
       "id": 1,
       "maxRound": 32,
-      "teamA": {
+      "teamFirstSideT": {
         "nationality": "France",
         "name": "Algebre",
         "id": 1
       },
       "overtime": True,
-      "teamB": {
+      "teamFirstSideCT": {
         "nationality": "France",
         "name": "Analyse",
         "id": 2

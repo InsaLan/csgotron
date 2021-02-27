@@ -5,7 +5,7 @@ from aiorcon import RCON
 from src.config import ConfigStore
 from src.db import models as db
 from src.db.models.Match import Match
-from .log_protocol import CSGOLogProtocol
+from src.io.log_protocol import CSGOLogProtocol
 
 config = ConfigStore.cfg
 
@@ -17,25 +17,27 @@ class MatchManager:
     self.logger = logging.getLogger(__name__)
 
   async def _update_match(self):
-    session = db.DBSession()
-    self.match = session.query(Match).filter(Match.id == self.match.id).one()
+    self.session = db.DBSession()
+    self.match = self.session.query(Match).filter(Match.id == self.match.id).one()
 
   async def setParameters(self):
-    await self.rcon("mp_overtime_maxrounds {}".format(self.match.maxRound))
+    await self._update_match()
+
+    await(self.rcon("mp_overtime_maxrounds {}".format(self.match.maxRound)))
 
     if self.match.overtime:
       await self.rcon("mp_overtime_enable 1")
 
-    await self.rcon("mp_teamname_1 \"{}\"".format(self.match.teamA.name))
-    await self.rcon("mp_teamname_2 \"{}\"".format(self.match.teamB.name))
+    await(self.rcon("mp_teamname_1 \"{}\"".format(self.match.teamFirstSideT.name)))
+    await(self.rcon("mp_teamname_2 \"{}\"".format(self.match.teamFirstSideCT.name)))
 
   async def setup(self):
     self.logger.info("Setting up match id={}".format(self.match.id))
     loop = asyncio.get_event_loop()
 
     # setup RCON
-    self.rcon = await RCON.create(str(self.match.server.ip), self.match.server.port, self.match.password, loop, timeout=3, auto_reconnect_attempts=0)
-   
+    self.rcon = await RCON.create(str(self.match.server.ip), self.match.server.port, self.match.password, loop, timeout=1, auto_reconnect_attempts=0)
+
     self.log_port = MatchManager.next_log_port
     if (MatchManager.next_log_port + 1) < config.log_port_range[1]:
       # FIXME: when match has ended, the port needs to be freed, the port allocation mechanism needs to be changed,

@@ -1,9 +1,10 @@
 from aiohttp import web
-import re
 from inspect import isfunction
-import jwt
-from ...db.Cache import Revokation_list
-from ..middlewares.exception import AuthorizationException, RevokedTokenException
+import re, jwt
+
+from src.db.Cache import Revokation_list
+from src.api.middlewares.exception import AuthorizationException, RevokedTokenException
+
 def auth_required(func):
     func.isAuth = True
     return func

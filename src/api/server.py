@@ -3,9 +3,9 @@ from . import common
 from aiohttp import web
 from marshmallow import Schema, fields, post_load
 
-from ..db import models as db
-from ..db.models.Server import Server
-from ..serializers.server import ServerSchema
+from src.db import models as db
+from src.db.models.Server import Server
+from src.serializers.server import ServerSchema
 
 routes = web.RouteTableDef()
 

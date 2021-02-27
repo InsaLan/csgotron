@@ -2,11 +2,13 @@ import asyncio
 import struct
 import logging
 
+from src.log_parser.parser import LogParser, BadMessageException
 
 class CSGOLogProtocol(asyncio.DatagramProtocol):
   def __init__(self, match_manager):
     self.logger = logging.getLogger(__name__)
     self.match_manager = match_manager
+    self.parser = LogParser()
 
   def connection_made(self, transport):
     self.transport = transport
@@ -28,8 +30,13 @@ class CSGOLogProtocol(asyncio.DatagramProtocol):
       print("malformed message received, bad footer {}".format(footer))
       return
     
-    message = data[7:-2].decode()
-    self.logger.debug("Recv log from {}: '{}'".format(addr, message))
+    timestamp = data[7:28].decode()
+    message = data[30:-2].decode()
 
-    # TODO: call parser and call handling routine
+    #self.logger.debug("Recv log from {}, timestamp: '{}', message: '{}'".format(addr, timestamp, message[:65] + (message[65:] and '...')))
 
+    try:
+      x = self.parser.parse(message)
+      #self.logger.info("MESSAGE HANDLED {}".format(x))
+    except BadMessageException:
+      self.logger.warning("Message '{}' at timestamp: '{}' was not handled by parser".format(message[:65] + (message[65:] and '...'),timestamp))

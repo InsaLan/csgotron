@@ -1,16 +1,15 @@
 from aiohttp import web
 from sqlalchemy.sql import table, column, select
 from hashlib import sha256
-import datetime
-import jwt
-import re
+import datetime, jwt, re
 
-from ..db.Cache import Revokation_list
-from ..db import models as db
+from src.db.Cache import Revokation_list
+from src.db import models as db
 from src.exceptions import UserDoestNotExists, PasswordDoesNotMatch
-from ..db.models.ApiUser import ApiUser
-from ..serializers.ApiUser import ApiUserCreationSchema, ApiUserAuthSchema
-from .middlewares.auth import auth_required
+from src.db.models.ApiUser import ApiUser
+from src.serializers.ApiUser import ApiUserCreationSchema, ApiUserAuthSchema
+from src.api.middlewares.auth import auth_required
+
 routes = web.RouteTableDef()
 
 SECRET_KEY = "VerySeCrEt" # DEBUG only

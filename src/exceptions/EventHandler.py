@@ -1,0 +1,2 @@
+class ReferenceToNonexistentPlayer(Exception):
+  pass
