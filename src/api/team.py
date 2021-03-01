@@ -1,6 +1,5 @@
 from aiohttp import web
 from marshmallow import Schema, fields, post_load
-
 from . import common
 from src.db import models as db
 from src.db.models.Team import Team
@@ -11,7 +10,7 @@ routes = web.RouteTableDef()
 @routes.view("/team")
 class TeamApi(web.View):
   schema = TeamSchema()
-
+  
   async def get(self):
     session = db.DBSession()
     qs = session.query(Team).all()

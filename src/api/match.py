@@ -1,6 +1,5 @@
 from aiohttp import web
 from marshmallow import Schema, fields, post_load
-
 from . import common
 from src.db import models as db
 from src.db.models.Match import Match, MatchState

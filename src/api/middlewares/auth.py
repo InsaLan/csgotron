@@ -15,7 +15,10 @@ async def auth_middleware(request, handler):
         if isfunction(handler):
             auth_req = hasattr(handler, "isAuth")
         else:
-            auth_req = hasattr(getattr(handler, request.method.lower()),"isAuth")
+            try:
+                auth_req = hasattr(getattr(handler, request.method.lower()),"isAuth")
+            except AttributeError:
+                auth_req = False
         if auth_req:
             auth = request.headers['Authorization']
             if (token := re.match('^Bearer ([-_.a-zA-Z0-9]*)$', auth)) is not None:

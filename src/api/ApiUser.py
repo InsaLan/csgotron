@@ -2,7 +2,6 @@ from aiohttp import web
 from sqlalchemy.sql import table, column, select
 from hashlib import sha256
 import datetime, jwt, re
-
 from src.db.Cache import Revokation_list
 from src.db import models as db
 from src.exceptions import UserDoestNotExists, PasswordDoesNotMatch
@@ -68,14 +67,11 @@ class UserApi(web.View):
 
     @auth_required
     async def get(self):
-        try:
-            session = db.DBSession()
-            return web.json_response({"sucess": "called from a protected route"})
-        except:
-            session.rollback()
-            raise
-        pass
-    
+        data = self.request.headers['Authorization']
+        user = jwt.decode(data.split(" ")[1], SECRET_KEY, algorithms='HS256')
+        print(user)
+        return web.json_response(user)
+
     async def post(self):
         data = await self.request.json()
         user = self.creation_request_schema.load(data)
