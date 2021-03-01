@@ -1,4 +1,4 @@
-
+#!/bin/bash
 curl -s --request POST \
   --url http://localhost:8080/team \
   --header 'Content-Type: application/json' \
@@ -36,3 +36,11 @@ curl -s --request POST \
 	"password": "changeme"
 }' > /dev/null
 
+curl -s --request POST \
+	--url http://localhost:8080/user \
+	--header 'Content-Type: application/json' \
+	--data '{
+	 "username": "test",
+	 "password": "secret"
+ }' > /dev/null
+		

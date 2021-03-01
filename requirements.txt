@@ -1,4 +1,5 @@
 aiohttp==3.7.4
+aiohttp-middlewares
 SQLAlchemy==1.3.20
 sqlalchemy-utils
 passlib
