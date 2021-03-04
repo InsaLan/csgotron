@@ -12,7 +12,7 @@ class SwitchTeamEventHandler(EventHandler):
                player_steam_id: str,
                src_team: str,
                dst_team: str):
-    
+    EventHandler.__init__(self)
     self.player_uid = player_uid
     self.player_steam_id = player_steam_id
 
@@ -25,8 +25,6 @@ class SwitchTeamEventHandler(EventHandler):
     # the SwitchTeamEvent allows us to link the Player to a Team object according to the chosen team : CT or T
 
     self.logger.debug("Handling SwitchTeamEvent for player id = {}".format(self.player_steam_id))
-
-    self.session = db.DBSession()
     
     # XXX: For the moment we take care of the initial team switch only and
     # we do not consider players that Spectate ('Spectator' team)

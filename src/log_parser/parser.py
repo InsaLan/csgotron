@@ -5,6 +5,7 @@ from src.log_parser.lexer import LogLexer
 from src.io.event_handlers.switch_team import *
 from src.io.event_handlers.entered_game import *
 from src.io.event_handlers.kill import *
+from src.io.event_handlers.round_start import *
 
 class BadMessageException(Exception):
   pass
@@ -99,13 +100,19 @@ class LogParser(object):
             else:
               p[0]= (p[1], p[3], None)
 
-
+    
+    """
     def p_term_round_messages(self,p):
           '''expression : ROUND_START
                           | ROUND_END 
                           | ROUND_SPAWN'''
           p[0] = p[1]
+    """
 
+    def p_expression_round_start(self, p):
+          '''expression : ROUND_START'''
+          p[0] = p[1]
+          self.out = RoundStartEventHandler()
 
     def p_error(self,p):
             print("Syntax error in input!", p)

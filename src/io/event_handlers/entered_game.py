@@ -9,14 +9,13 @@ class EnteredGameEventHandler(EventHandler):
                player_name: str,
                player_uid: int,
                player_steam_id: str):
+    EventHandler.__init__(self)
     self.player_name = player_name
     self.player_uid = player_uid
     self.player_steam_id = player_steam_id
     self.logger = logging.getLogger(__name__)
 
   def handle(self, match: Match):
-
-    self.session = db.DBSession()
     is_bot = False
 
     if self.player_steam_id == 'BOT':

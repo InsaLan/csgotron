@@ -2,10 +2,10 @@ import logging
 from typing import Tuple
 
 from . import EventHandler
-from src.db import models as db
 from src.db.models.Match import Match
 from src.db.models.Player import Player
 from src.db.models.Kill import Kill
+from src.db.models.Round import Round
 from src.exceptions.EventHandler import *
 
 class KillEventHandler(EventHandler):
@@ -16,7 +16,7 @@ class KillEventHandler(EventHandler):
                pos_victim: str,
                weapon: str,
                is_headshot: bool):
-
+    EventHandler.__init__(self)
     self.logger = logging.getLogger(__name__)
     self.pterm_killer = pterm_killer
     self.pos_killer = pos_killer
@@ -25,7 +25,7 @@ class KillEventHandler(EventHandler):
     self.weapon = weapon
     self.is_headshot = is_headshot
 
-  def get_player_from_pterm(pterm):
+  def get_player_from_pterm(pterm: Tuple[Tuple[str,int],str,str]):
       qs = self.session.query(Player).filter(Player.id == self.get_id_from_pterm(match.id, pterm))
 
       if qs.count() == 0:
@@ -33,11 +33,7 @@ class KillEventHandler(EventHandler):
 
       return qs.one()
 
-
   def handle(self, match: Match):
-
-    self.session = db.DBSession()
-
     killer = self.get_player_from_pterm(self.pterm_killer)
     victim = self.get_player_from_pterm(self.pterm_victim)
 
@@ -50,7 +46,7 @@ class KillEventHandler(EventHandler):
              killedId=victim.id,
              killerId=killer.id,
              matchId=match.id,
-             roundId=1, # FIXME
+             roundId=self.get_current_round_id(match.id),
              isHeadshot=self.is_headshot,
     )
 
