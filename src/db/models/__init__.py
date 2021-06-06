@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
-Base = None
+Base = declarative_base()
 session = None
 DBSession = None
 engine = None
@@ -21,8 +21,6 @@ def init_engine(filename):
     # by default sqlite does not enforce FOREIGN KEY constraints,
     # it needs to be activated manually
     event.listen(engine, 'connect', _fk_pragma_on_connect)
-
-    Base = declarative_base() 
 
 def flush_data():
     Base.metadata.drop_all(engine)

@@ -30,8 +30,9 @@ async def login(request):
             raise PasswordDoesNotMatch
         user.token = secrets.token_hex(50) # TODO: enforce this secret
         db_session.commit()
-        session =await new_session(request)
+        session  = await new_session(request)
         session['session_token'] = user.token
+        print(session)
         return web.json_response({'success':'logged'})
     except:
         db_session.rollback()
@@ -48,6 +49,7 @@ class UserApi(web.View):
     async def get(self):
         return web.json_response({"poke":"ping"})
 
+    @auth_required
     async def post(self):
         data = await self.request.json()
         user = self.creation_request_schema.load(data)

@@ -17,6 +17,7 @@ class TeamApi(web.View):
     qs = session.query(Team).all()
     return web.json_response(self.schema.dump(qs, many=True))
 
+  @auth_required
   async def post(self):
     data = await self.request.json()
     team = self.schema.load(data)

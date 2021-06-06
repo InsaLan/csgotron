@@ -2,7 +2,10 @@ from aiohttp import web
 from inspect import isfunction
 import re, jwt
 from aiohttp_session import *
-from src.api.middlewares.exception import AuthorizationException, RevokedTokenException
+
+from src.api.middlewares.exception import AuthorizationException
+from src.db import models as db
+from src.db.models.ApiUser import ApiUser
 
 def auth_required(func):
     func.isAuth = True
@@ -19,11 +22,14 @@ async def auth_middleware(request, handler):
             except AttributeError:
                 auth_req = False
         if auth_req:
+                db_session = db.DBSession()
                 session = await get_session(request)
-                print(session['session_token'])
-                 
-                response = await handler(request)
-                return response
+                user = db_session.query(ApiUser).filter_by(token=session['session_token']).first()
+                if user is not None:
+                    response = await handler(request)
+                    return response
+                db_session.commit()
+                raise AuthorizationException("Unknown token")
         else:
             response = await handler(request)
             return response
