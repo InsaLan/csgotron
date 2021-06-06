@@ -17,4 +17,5 @@ class ApiUser(Base):
             'sha256_crypt',
         ],
     ))
+    token = Column(String(50), nullable=True) #TODO: handle cypher
 

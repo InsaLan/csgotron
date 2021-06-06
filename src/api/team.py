@@ -4,6 +4,7 @@ from . import common
 from src.db import models as db
 from src.db.models.Team import Team
 from src.serializers.team import TeamSchema
+from src.api.middlewares.auth import auth_required 
 
 routes = web.RouteTableDef()
 
@@ -62,6 +63,7 @@ class TeamDetailsApi(common.DetailsApi):
     return web.json_response(self.schema.dump(team))
 
   
+  @auth_required
   async def delete(self):
     _id = await self.get_object_id()
 
@@ -75,4 +77,4 @@ class TeamDetailsApi(common.DetailsApi):
       session.rollback()
       raise
 
-    raise web.HTTPNoContent
+    return web.json_response({"success": "the team has been deleted"}, status=200)
