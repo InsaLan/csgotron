@@ -1,6 +1,5 @@
 from aiohttp import web
 from marshmallow import Schema, fields, post_load
-
 from . import common
 from src.db import models as db
 from src.db.models.Match import Match, MatchState
@@ -42,6 +41,7 @@ class MatchApi(web.View):
     qs = session.query(Match).all()
     return web.json_response(self.schema.dump(qs, many=True))
 
+  @auth_required
   async def post(self):
     data = await self.request.json()
     match = self.schema.load(data)
@@ -115,6 +115,7 @@ class MatchDetailsApi(common.DetailsApi):
     return web.json_response(self.schema.dump(match))
 
   
+  @auth_required
   async def delete(self):
     _id = await self.get_object_id()
 
@@ -135,4 +136,4 @@ class MatchDetailsApi(common.DetailsApi):
       session.rollback()
       raise
 
-    raise web.HTTPNoContent
+    return web.json_response({"success": "the match has been deleted"}, status=200)

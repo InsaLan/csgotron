@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, UniqueConstraint
 from sqlalchemy_utils import PasswordType, force_auto_coercion
 
-from . import Base
+from src.db.models import Base
 
 force_auto_coercion()
 
@@ -17,4 +17,5 @@ class ApiUser(Base):
             'sha256_crypt',
         ],
     ))
+    token = Column(String(50), nullable=True) #TODO: handle cypher
 

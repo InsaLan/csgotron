@@ -2,7 +2,6 @@ from . import common
 
 from aiohttp import web
 from marshmallow import Schema, fields, post_load
-
 from src.db import models as db
 from src.db.models.Server import Server
 from src.serializers.server import ServerSchema
@@ -12,7 +11,7 @@ routes = web.RouteTableDef()
 @routes.view("/server")
 class ServerApi(web.View):
   schema = ServerSchema()
-
+  
   async def get(self):
     session = db.DBSession()
     qs = session.query(Server).all()
